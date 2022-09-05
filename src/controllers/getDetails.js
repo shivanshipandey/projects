@@ -9,7 +9,7 @@ const getBlogs = async function(req, res){
 
         let getBlogs = await blogModel.find({ isPublished: true}, {isDeleted: false})
         if(!getBlogs) { return res.status(404).send({status: false, data: "No such blog found"})}
-        let filtered = await getBlogs.find({authorId: authorId}, {category: category}, {tags:tags})
+     //   let filtered = await getBlogs.find({authorId: authorId}, {category: category}, {tags:tags})
         res.status(200).send({status : true , data : getBlogs})
 
     }
@@ -17,3 +17,5 @@ const getBlogs = async function(req, res){
         res.status(500).send({ status: false, message: error.message})
     }
 }
+
+module.exports.getBlogs = getBlogs
