@@ -1,6 +1,6 @@
-# Uranium
+# Plutonium
 
-Repository for backend cohort - Uranium
+Repository for backend cohort - Plutonium
 
 ## Blogging Site Mini Project Requirement
 
