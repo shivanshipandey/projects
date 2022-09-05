@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Schema.Types.ObjectId
-
+const typemix = mongoose.Schema.Types.Mixed
 const blogSchema = new mongoose.Schema({
     title: {
         type : String,
@@ -12,15 +12,19 @@ const blogSchema = new mongoose.Schema({
     },
     authorId : {
         type : ObjectId,
-        required : true,
-        ref : authorsName
+        ref : "authorsName",
+        required : true       
     },
-    tags: [{type: String}],
+    tags: {
+        type: typemix
+    },
     category : {
         type : String,
         required : true
     },
-    subcategory : [{type: String}],
+    subcategory : {
+        type: typemix
+    },
     isDeleted : {
         type : Boolean,
         default : false
@@ -31,6 +35,7 @@ const blogSchema = new mongoose.Schema({
     },
     publishedAt : String,
     deletedAt : String
+
 }, { timestamps : true});
 
 module.exports = mongoose.model('blogName', blogSchema)
