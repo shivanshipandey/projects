@@ -1,17 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const authorController = require("../controllers/authorController.js")
 
 
 
-
-
-
-
-
-
-
-
-
+// create author api
+router.post("/authors", authorController.createAuthor)
 
 
 
