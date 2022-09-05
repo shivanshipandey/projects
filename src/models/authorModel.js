@@ -24,7 +24,7 @@ password: {
     required : true,
  }
 
-}, { timestamps: true, isdeletedAt : true });
+}, { timestamps: true});
 
 
 module.exports = mongoose.model('authorsName', authorSchema)
