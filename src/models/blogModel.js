@@ -33,8 +33,12 @@ const blogSchema = new mongoose.Schema({
         type : Boolean,
         default : false
     },
-    publishedAt : String,
-    deletedAt : String
+    publishedAt :{
+        type : Date,
+    },
+    deletedAt :{
+        type : Date
+    }
 
 }, { timestamps : true});
 

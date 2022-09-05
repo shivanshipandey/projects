@@ -9,10 +9,12 @@ const blogController =   require("../controllers/blogController")
 // create author api
 router.post("/authors", authorController.createAuthor)
 
-router.get("/getBlogs", getBlog.getBlogs)
-
 // create blog api
 router.post("/blogs",blogController.createBlog)
+
+//get blogs 
+router.get("/getBlogs", getBlog.getBlogs)
+
 
 
 
