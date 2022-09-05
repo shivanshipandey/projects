@@ -21,5 +21,4 @@ router.get("/getBlogs", getBlog.getBlogs)
 
 
 
-
 module.exports =router
