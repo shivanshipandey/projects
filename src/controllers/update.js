@@ -19,7 +19,8 @@ const updateBlog = async function (req, res) {
         if (subcategory != null) { objarray.subcategory = subcategory }
         let update = await blogModel.updateMany({ _id: blogID }, { $set: obj, $push: objarray }, { upsert: true, new: true })
         let updatePublish = await blogModel.updateMany({ _id: blogID }, { isPublished: true, publishedAt: moment().format() }, { upsert: true, new: true })
-        res.send({ status: true, data: {update, updatePublish}})
+         let publishedAt = moment().format()
+        res.send({ status: true, publishedAt : publishedAt,data: {update, updatePublish}})
     }
     catch (error) {
         res.status(500).send({ status: false, message: error.message })
