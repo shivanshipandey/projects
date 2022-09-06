@@ -15,7 +15,7 @@ const createAuthor = async function (req, res) {
                return res.status(409).send({ status: false, msg: "this e-mail id is already registered" })
           }
           let authorStored = await authorModel.create(authorData)
-          res.status(201).send({ status: true, msg: "data created" })
+          res.status(201).send({ status: true, msg: authorStored })
      }
      catch (error) {
           res.status(500).send({ status: false, message: error.message })
