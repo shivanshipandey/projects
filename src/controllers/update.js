@@ -14,12 +14,12 @@ const updateBlog = async function (req, res) {
         let obj = {}
         let objarray = {}
         if (title != null) { obj.title = title }
-        if (body != null) { obj.body = body }
+        if (body != null) { obj.body = body}
         if (tags != null) { objarray.tags = tags }
         if (subcategory != null) { objarray.subcategory = subcategory }
-        let update = await blogModel.updateMany({ _id: blogID }, { $set: obj, $push: objarray }, { upsert: true, new: true })
-        let updatePublish = await blogModel.updateMany({ _id: blogID }, { isPublished: true, publishedAt: moment().format() }, { upsert: true, new: true })
-        res.send({ status: true, data: {update, updatePublish}})
+        let update = await blogModel.findOneAndUpdate({ _id: blogID }, { $set: obj, $push: objarray }, { upsert: true, new: true })
+        let updatePublish = await blogModel.findOneAndUpdate({ _id: blogID }, { isPublished: true, publishedAt: moment().format() }, { upsert: true, new: true })
+        res.send({ status: true, data: updatePublish})
     }
     catch (error) {
         res.status(500).send({ status: false, message: error.message })

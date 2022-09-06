@@ -49,7 +49,7 @@ const deleteBlogs = async function (req, res) {
         if (filtered.length == 0) {
             return res.status(400).send({ status: false, message: "No such data found" })
         } else {
-            let deletedData = await blogModel.updateMany(filter, { isDeleted: true }, { upsert: true, new: true })
+            let deletedData = await blogModel.updateMany(filter, { isDeleted: true, deletedAt: moment().format() }, { upsert: true, new: true })
             return res.status(200).send({ status: true, message: deletedData })
         }
     }

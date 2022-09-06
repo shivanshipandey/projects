@@ -16,7 +16,7 @@ const getBlogs = async function (req, res) {
             if(subcategory != null){ filter.subcategory = {$in:[subcategory]}}
             let filtered = await blogModel.find(filter)
             if (filtered.length == 0) { return res.status(400).send({ status: false, message: "No such data found" }) }
-            return res.status(200).send({ status: true, message: filtered })
+            res.status(200).send({ status: true, message: filtered })
         }
         else {
             let getBlogs = await blogModel.find({ $and: [{ isPublished: true }, { isDeleted: false }] })
