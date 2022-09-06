@@ -8,9 +8,7 @@ const getBlogs = async function (req, res) {
         if (Object.keys(obj).length != 0) {
             if (authorId) {
                 if (!isValid) { return res.status(400).send({ status: false, message: "Not a valid Author ID" }) }
-            }              
-
-
+            }
             let filter = {isPublished: true ,  isDeleted: false }
             if (authorId != null) { filter.authorId = authorId }
             if (category != null) { filter.category = category }
