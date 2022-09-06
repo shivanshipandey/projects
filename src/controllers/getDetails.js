@@ -8,8 +8,10 @@ const getBlogs = async function (req, res) {
         if (Object.keys(obj).length != 0) {
             if (authorId) {
                 if (!isValid) { return res.status(400).send({ status: false, message: "Not a valid Author ID" }) }
-            }
-            let filter = {}
+            }              
+
+
+            let filter = {isPublished: true ,  isDeleted: false }
             if (authorId != null) { filter.authorId = authorId }
             if (category != null) { filter.category = category }
             if (tags != null) { filter.tags = { $in: [tags] } }
@@ -23,7 +25,7 @@ const getBlogs = async function (req, res) {
             if (!getBlogs.length) { return res.status(404).send({ status: false, data: "No such blog found" }) }
             return res.status(200).send({ status: true, data: getBlogs })
         }
-    }
+    }  
     catch (error) {
         res.status(500).send({ status: false, message: error.message })
     }
