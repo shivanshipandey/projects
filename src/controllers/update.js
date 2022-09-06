@@ -9,6 +9,9 @@ const updateBlog = async function (req, res) {
         let { title, body, tags, subcategory } = req.body
         let isValid = mongoose.Types.ObjectId.isValid(blogID)
         if (!isValid) { return res.status(400).send({ status: false, message: "Not a valid BlogID" }) }
+                  
+        
+        
         let deleteCheck = await blogModel.findOne({_id: blogID, isDeleted: false})
         if (!deleteCheck) { return res.status(404).send({ status: false, message: "No such blog exist" }) }
         let obj = {}
