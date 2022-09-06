@@ -15,7 +15,7 @@ Repository for backend cohort - Plutonium
 ```
 { title: {mandatory}, body: {mandatory}, authorId: {mandatory, refs to author model}, tags: {array of string}, category: {string, mandatory, examples: [technology, entertainment, life style, food, fashion]}, subcategory: {array of string, examples[technology-[web development, mobile development, AI, ML etc]] }, createdAt, updatedAt, deletedAt: {when the document is deleted}, isDeleted: {boolean, default: false}, publishedAt: {when the blog is published}, isPublished: {boolean, default: false}}
 ```
-//HELOO
+
 ### Author APIs /authors
 - Create an author - atleast 5 authors
 - Create a author document from request body.
