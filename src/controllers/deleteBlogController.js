@@ -13,7 +13,7 @@ const checkBlogs = async (req, res) => {
             if (dbBlogId.isDeleted == false) {
                 let changeStatus = await blogModel.updateOne({ _id: rBlogId }, { $set: { isDeleted: true, deletedAt: moment().format() } }, { new: true, upsert: true })
                 let deletedAt = dbBlogId.deletedAt
-                return res.status(200).send({ status: true, msg: changeStatus, deletedAt})
+                return res.status(200).send({ status: true, msg:"data Deleted successfully", changeStatus, deletedAt})
             } else {
                 return res.status(400).send({ status: false, msg: "Data is already deleted." })
             }
@@ -24,7 +24,7 @@ const checkBlogs = async (req, res) => {
 
 }
 
-//second quesiton of delte api 
+//second quesiton of delete api 
 
 const deleteBlogs = async function (req, res) {
     try {
@@ -49,8 +49,10 @@ const deleteBlogs = async function (req, res) {
         if (filtered.length == 0) {
             return res.status(400).send({ status: false, message: "No such data found" })
         } else {
-            let deletedData = await blogModel.updateMany(filter, { isDeleted: true }, { upsert: true, new: true })
-            return res.status(200).send({ status: true, message: deletedData })
+            
+            let deletedData = await blogModel.updateMany(filter, { isDeleted: true  ,deletedAt: moment().format() }, { upsert: true, new: true })
+        let deletedAt = moment().format()   
+         return res.status(200).send({ status: true, msg: "data deleted successfully",message: deletedData,deletedAt :deletedAt })
         }
     }
     catch (error) {
