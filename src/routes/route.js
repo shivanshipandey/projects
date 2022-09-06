@@ -17,16 +17,12 @@ router.post("/blogs",blogController.createBlog)
 //get blogs 
 router.get("/getBlogs", getBlog.getBlogs)
 
+
+// DELETE /blogs/:blogId
+router.delete('/blogs/:blogId', deleteBlog.checkBlogs)
+
 //update blogs
 router.put("/blogs/:blogId", updateController.updateBlog)
-
-//delete api 
-router.delete("/blogs/:blogId", deleteBlog.checkBlogs)
-
-// delete blogs
-
-router.delete("/blogss",deleteBlog.deleteBlogs)
-
 
 
 
