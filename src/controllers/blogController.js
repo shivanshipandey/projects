@@ -13,7 +13,7 @@ const createBlog = async function (req, res) {
           let checkID = await authorModel.findOne({_id : authorID})
           if(!checkID){ return res.status(200).send({status: false, message: "No such authorID found"})}
           let blogStored = await blogModel.create(blogData)
-          res.status(201).send({ status: true, message: blogStored })
+          res.status(201).send({ status: true, message: "done" })
      }
      catch (error) {
           res.status(500).send({ status: false, message: error.message })
