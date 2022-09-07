@@ -91,7 +91,7 @@ const deleteByBlogID = async (req, res) => {
           let dbBlogId = await blogModel.findById(rBlogId)
           if (dbBlogId) {
                if (dbBlogId.isDeleted == false) {
-                    let changeStatus = await blogModel.updateOne({ _id: rBlogId }, { $set: { isDeleted: true, deletedAt: moment().format() } }, { new: true, upsert: true })
+                    let changeStatus = await blogModel.findOneAndUpdate({ _id: rBlogId }, { $set: { isDeleted: true, deletedAt: moment().format() } }, { new: true, upsert: true })
                     let deletedAt = dbBlogId.deletedAt
                     return res.status(200).send({ status: true, msg: "Data Deleted successfully", changeStatus, deletedAt })
                } else {
@@ -111,7 +111,7 @@ const deleteByFilter = async function (req, res) {
      try {
           let obj = req.query
           let { authorId, category, tags, subcategory, isPublished } = obj
-          if (!authorId) { return res.status(400).send({ status: false, message: "AuthorID required" }) }
+        //  if (!authorId) { return res.status(400).send({ status: false, message: "AuthorID required" }) }
           if (Object.keys(obj).length === 0) {
                return res.status(400).send({ status: false, message: "Please give some parameters to check" })
           }
@@ -125,7 +125,7 @@ const deleteByFilter = async function (req, res) {
           if (filtered.length == 0) {
                return res.status(400).send({ status: false, message: "No such data found" })
           } else {
-               let deletedData = await blogModel.updateMany(filter, { isDeleted: true, deletedAt: moment().format() }, { upsert: true, new: true })
+               let deletedData = await blogModel.findOneAndUpdate(filter, { isDeleted: true, deletedAt: moment().format() }, { upsert: true, new: true })
                return res.status(200).send({ status: true, message: deletedData })
           }
      }

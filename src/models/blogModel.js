@@ -16,7 +16,7 @@ const blogSchema = new mongoose.Schema({
         required : true       
     },
     tags: {
-        type: typemix
+        type : typemix
     },
     category : {
         type : String,
