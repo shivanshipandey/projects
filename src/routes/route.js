@@ -20,10 +20,17 @@ router.put("/blogs/:blogId", commonMW.authentication, commonMW.authorization, bl
 router.delete('/blogs/:blogId', commonMW.authentication, commonMW.authorization, blogController.deleteByBlogID)
 
 // DELETE /blogs?queryParams
-router.delete("/blogs",commonMW.authentication, commonMW.authorization, blogController.deleteByFilter)
+router.delete("/blogs",commonMW.authentication, commonMW.authorization, commonMW.delWithoutID, blogController.deleteByFilter)
 
 //Login Author
-router.post('/login',commonMW.loginAuthor)
+router.post('/login',authorController.loginAuthor)
+
+router.all("/*", function (req, res) {
+    res.status(404).send({
+        status: false,
+        message: "Make Sure Your Endpoint is Correct !!!"
+    })
+})
 
 
 module.exports =router
