@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authorController = require("../controllers/authorController.js")
 const blogController = require("../controllers/blogController")
-const commonMW = require('../middleware/myMid')
+const commonMW = require('../middleware/auth')
 
 // create author api
 router.post("/authors", authorController.createAuthor)
@@ -31,6 +31,10 @@ router.all("/*", function (req, res) {
         message: "Make Sure Your Endpoint is Correct !!!"
     })
 })
+
+
+
+
 
 
 module.exports =router
