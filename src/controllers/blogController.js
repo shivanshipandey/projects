@@ -13,7 +13,7 @@ const createBlog = async function (req, res) {
           let isValid = mongoose.Types.ObjectId.isValid(authorId)
           if (!isValid) { return res.status(400).send({ status: false, message: "Not a Valid AuthorID" }) }
           let checkID = await authorModel.findOne({ _id: authorId })
-          if (!checkID) { return res.status(200).send({ status: false, message: "No such authorID found" }) }
+          if (!checkID) { return res.status(404).send({ status: false, message: "No such authorID found" }) }
           if (isPublished == true) {
                req.body.publishedAt = moment().format()
           }
@@ -41,7 +41,7 @@ const getBlogs = async function (req, res) {
                if (tags != null) { filter.tags = { $in: [tags] } }
                if (subcategory != null) { filter.subcategory = { $in: [subcategory] } }
                let filtered = await blogModel.find(filter)
-               if (filtered.length == 0) { return res.status(400).send({ status: false, message: "No such data found" }) }
+               if (filtered.length == 0) { return res.status(404).send({ status: false, message: "No such data found" }) }
                res.status(200).send({ status: true, message: filtered })
           }
           else {
@@ -64,15 +64,17 @@ const updateBlog = async function (req, res) {
           let { title, body, tags, subcategory } = req.body
           let deleteCheck = await blogModel.findOne({ _id: blogID, isDeleted: false })
           if (!deleteCheck) { return res.status(404).send({ status: false, message: "No such blog exist" }) }
-          let obj = {}
+          let obj = {
+               isPublished: true, 
+               publishedAt: moment().format()
+          }
           let objarray = {}
           if (title != null) { obj.title = title }
           if (body != null) { obj.body = body }
           if (tags != null) { objarray.tags = tags }
           if (subcategory != null) { objarray.subcategory = subcategory }
           let update = await blogModel.findOneAndUpdate({ _id: blogID }, { $set: obj, $push: objarray }, { upsert: true, new: true })
-          let updatePublish = await blogModel.findOneAndUpdate({ _id: blogID }, { isPublished: true, publishedAt: moment().format() }, { upsert: true, new: true })
-          res.send({ status: true, data: updatePublish })
+          res.status(200).send({ status: true, data: update })
      }
      catch (error) {
           res.status(500).send({ status: false, message: error.message })
@@ -91,9 +93,9 @@ const deleteByBlogID = async (req, res) => {
                if (dbBlogId.isDeleted == false) {
                     let changeStatus = await blogModel.updateOne({ _id: rBlogId }, { $set: { isDeleted: true, deletedAt: moment().format() } }, { new: true, upsert: true })
                     let deletedAt = dbBlogId.deletedAt
-                    return res.status(200).send({ status: true, msg: "data Deleted successfully", changeStatus, deletedAt })
+                    return res.status(200).send({ status: true, msg: "Data Deleted successfully", changeStatus, deletedAt })
                } else {
-                    return res.status(400).send({ status: false, msg: "Data is already deleted." })
+                    return res.status(404).send({ status: false, msg: "Data had been deleted." })
                }
           }
      } catch (error) {

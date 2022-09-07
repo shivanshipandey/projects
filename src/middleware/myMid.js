@@ -51,7 +51,7 @@ const authorization = async function (req, res, next) {
         let decodedToken = jwt.verify(token, "Blogging-Site")
         if (req.query.authorId) {
             let authorId = req.query.authorId
-            if (!ObjectID.isValid(authorId)) { return res.status(200).send({ status: false, message: "Not a valid AuthorID" }) }
+            if (!ObjectID.isValid(authorId)) { return res.status(400).send({ status: false, message: "Not a valid AuthorID" }) }
             if (authorId != decodedToken.authorId) {
                 return res.status(403).send({ status: false, message: "You are not a authorized user" })
             }
@@ -59,7 +59,7 @@ const authorization = async function (req, res, next) {
         }
         if (req.params.blogId) {
             let blogId = req.params.blogId
-            if (!ObjectID.isValid(blogId)) { return res.status(200).send({ status: false, message: "Not a valid BlogID" }) }
+            if (!ObjectID.isValid(blogId)) { return res.status(400).send({ status: false, message: "Not a valid BlogID" }) }
             let check = await blogModel.findById(blogId)
             if (!check) { return res.status(404).send({ status: false, message: "No such blog exists" }) }
             if (check.authorId != decodedToken.authorId) {
@@ -67,14 +67,7 @@ const authorization = async function (req, res, next) {
             }
             return next()
         }
-        if (req.body.authorId) {
-            let authorId = req.body.authorId
-            if (!ObjectID.isValid(authorId)) { return res.status(200).send({ status: false, message: "Not a valid AuthorID" }) }
-            if (authorId != decodedToken.authorId) {
-                return res.status(403).send({ status: false, message: "You are not a authorized user" })
-            }
-            return next()
-        } else {
+        else {
             return res.status(403).send({ status: false, message: "AuthorID or BlogID is mandatory" })
         }
     }
