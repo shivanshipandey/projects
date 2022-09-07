@@ -4,7 +4,7 @@ const moment = require('moment')
 const authorModel = require('../models/authorModel')
 
 const createBlog = async function (req, res) {
-     try {
+     try{
           let {authorId, isPublished } = req.body
           if (!authorId) { return res.status(400).send({ status: false, message: "AuthorID required" })}
           let isValid = mongoose.Types.ObjectId.isValid(authorId)
@@ -15,7 +15,6 @@ const createBlog = async function (req, res) {
                req.body.publishedAt = moment().format()
           }
           let blogStored = await blogModel.create(req.body)
-          
           res.status(201).send({ status: true, message: blogStored, })
      }
      catch (error) {
