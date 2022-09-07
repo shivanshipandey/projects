@@ -46,7 +46,6 @@ const authentication = async function (req, res, next) {
 
 const authorization = async function (req, res, next) {
     try {
-        console.log(req.params)
         let token = req.headers['x-api-key']
         let ObjectID = mongoose.Types.ObjectId
         let decodedToken = jwt.verify(token, "Blogging-Site")
