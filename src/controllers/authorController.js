@@ -1,5 +1,8 @@
 const authorModel = require("../models/authorModel")
 const validator = require('validator')
+
+//create Author
+
 const createAuthor = async function (req, res) {
      try {
           let authorData = req.body
@@ -24,7 +27,8 @@ const createAuthor = async function (req, res) {
      }
 }
 
-module.exports.createAuthor = createAuthor;
+
+module.exports = {createAuthor};
 
 
 
