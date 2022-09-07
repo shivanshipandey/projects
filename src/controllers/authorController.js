@@ -7,9 +7,9 @@ const createAuthor = async function (req, res) {
      try {
           let authorData = req.body
           let { fname, lname, email } = req.body
-          let chek1 = /^[a-zA-Z ]+$/.test(fname) 
-          let chek2 = /^[a-zA-Z ]+$/.test(lname) 
-          if (chek1 == false || chek2 == false ){
+          let chek1 = /^[a-zA-Z ]+$/.test(fname)
+          let chek2 = /^[a-zA-Z ]+$/.test(lname)
+          if (chek1 == false || chek2 == false) {
                return res.status(400).send({ status: false, message: "Please enter letters only, don't enter special character or digit" })
           }
           if (!validator.isEmail(email)) {
@@ -28,7 +28,7 @@ const createAuthor = async function (req, res) {
 }
 
 
-module.exports = {createAuthor};
+module.exports = { createAuthor };
 
 
 
