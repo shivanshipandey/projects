@@ -49,8 +49,11 @@ const createBlog = async function (req, res) {
           // categories should be in Strings only
           if (typeof (category) != "string") {
                return res.status(400).send({ status: false, message: "Give category only in a String." })
-          } if (typeof (isPublished) != "boolean") {
+          }
+          if(isPublished){ 
+               if (typeof (isPublished) != "boolean") {
                return res.status(400).send({ status: false, message: "isPublished can be true or false only" })
+          }
           }
 
           //Here's the creation of blog
