@@ -14,7 +14,7 @@ const createBlog = async function (req, res) {
 
           // Inserting credentials is mandatory
 
-          let { title, body, authorId, category, isPublished } = req.body
+          let { title, body, authorId, category, isPublished, subcategory, tags } = req.body
           if (!title) {
                return res.status(400).send({ status: false, message: "title is required" })
           }
@@ -46,6 +46,13 @@ const createBlog = async function (req, res) {
                return res.status(400).send({status: false, message: "Give body only in a String."})
           }
 
+          //if tags is present then it should be an array
+          if(tags){
+               if(!Array.isArray(tags)){
+                    return res.status(400).send({status: false, message: "Give tags only in a array of String."})
+               }
+          }
+
           // categories should be in Strings only
           if (typeof (category) != "string") {
                return res.status(400).send({ status: false, message: "Give category only in a String." })
@@ -55,6 +62,21 @@ const createBlog = async function (req, res) {
                return res.status(400).send({ status: false, message: "isPublished can be true or false only" })
           }
           }
+
+          //if subcategory is present then it should be an array
+          if(subcategory){
+               if(!Array.isArray(subcategory)){
+                    return res.status(400).send({status: false, message: "Give subcategory only in a array of String."})
+               }
+          }
+
+          //if isPublished is present then it should be Boolean
+          if(isPublished){
+               if (typeof (isPublished) != "boolean") {
+                    return res.status(400).send({ status: false, message: "isPublished can be true or false only" })
+               }
+          }
+          
 
           //Here's the creation of blog
           if (isPublished == true) { req.body.publishedAt = time }
