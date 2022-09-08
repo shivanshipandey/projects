@@ -38,7 +38,7 @@ const authorization = async function (req, res, next) {
             }
             return next()
         }
-        console.log(req.params.blogId)
+        
         if (req.params.blogId) {
             let blogId = req.params.blogId
             if (!ObjectID.isValid(blogId)) { return res.status(400).send({ status: false, message: "Not a valid BlogID" }) }
@@ -68,7 +68,7 @@ let fucntionForDeleteFilter = async function (req,res ,next){
     let decodedToken = jwt.verify(token, "Blogging-Site")
     let AuthorID = decodedToken.authorId
     if(req.query.authorId ){
-        if(AuthorID != req.query.authorId) return res.status(403).send({status : false, nesssage: " Youare not authorised "})
+        if(AuthorID != req.query.authorId) return res.status(403).send({status : false, messsage: " You are not authorised "})
     }
      
     let filter = { isDeleted: false , authorId : AuthorID}

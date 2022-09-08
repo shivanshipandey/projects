@@ -38,7 +38,7 @@ const getBlogs = async function (req, res) {
                let filter = { isPublished: true, isDeleted: false }
                if (authorId != null) { filter.authorId = authorId }
                if (category != null) { filter.category = category }
-               if (tags != null) { filter.tags = { $in: [tags] } }
+               if (tags != null) { filter.tags = { $in: [tags] }}
                if (subcategory != null) { filter.subcategory = { $in: [subcategory] } }
                let filtered = await blogModel.find(filter)
                if (filtered.length == 0) { return res.status(404).send({ status: false, message: "No such data found" }) }
