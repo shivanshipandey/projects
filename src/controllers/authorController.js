@@ -7,7 +7,6 @@ const createAuthor = async function (req, res) {
      try {
           let authorData = req.body
           let { fname, lname, title, email, password } = req.body
-          //let compare = ['fname', 'lname', 'title', 'email', 'password']
           let arr = Object.keys(req.body)
           if (!fname) {
                return res.status(400).send({
@@ -34,15 +33,6 @@ const createAuthor = async function (req, res) {
                     status: false, message: "password is required."
                })
           }
-
-          // for (let i = 0; i < compare.length; i++) {
-          //      if (compare[i] != arr[i]) {
-          //           return res.status(400).send({
-          //                status: false,
-          //                message: " Give fname, lname, title, e-mail, password only in this sequence"
-          //           })
-          //      }
-          // }
           if (arr.length > 5) {
                return res.status(400).send({
                     status: false,
@@ -53,7 +43,6 @@ const createAuthor = async function (req, res) {
           let firstName = /^[a-zA-Z ]+$/.test(fname)
           let lastName = /^[a-zA-Z ]+$/.test(lname)
 
-          if (req.body.title === "Mr" || req.body.title === "Miss" || req.body.title === "Mrs") {
                if (firstName == false || lastName == false) {
                     return res.status(400).send({
                          status: false,
@@ -101,8 +90,7 @@ const createAuthor = async function (req, res) {
                          status: true,
                          message: authorStored
                     })
-               }
-          } else {
+               } else {
                return res.status(400).send({
                     status: false,
                     message: "Title can be  Mr,  Miss,  Mrs only."

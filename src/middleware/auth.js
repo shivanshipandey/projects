@@ -60,6 +60,7 @@ const delWithoutID = async function (req, res, next) {
         decodedToken = jwt.verify(token, "Blogging-Site")
         let AuthorID = decodedToken.authorId
         token = req.headers['x-api-key']
+        console.log(authorId, AuthorID)
         if (req.query.authorId) {
             if (AuthorID != authorId) {
                 return res.status(403).send({ status: false, messsage: " You are not authorized " })
@@ -72,9 +73,11 @@ const delWithoutID = async function (req, res, next) {
         if (subcategory != null) { filter.subcategory = { $in: [subcategory] } }
         if (isPublished != null) { filter.isPublished = isPublished }
         let filtered = await blogModel.find(filter)
+        console.log(filter)
         if (!filtered.length) {
             return res.status(400).send({ status: false, message: "No such data found" })
         }
+
         next()
     }
     catch (error) {
