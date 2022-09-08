@@ -11,9 +11,12 @@ const authentication = async function (req, res, next) {
     try {
         token = req.headers['x-api-key']
         if (!token) { return res.status(400).send({ status: false, message: "Token is missing" }) }
-        decodedToken = jwt.verify(token, "Blogging-Site")
-        if (!decodedToken) { return res.status(400).send({ status: false, message: "Not a Valid Token" }) }
-        next()
+        decodedToken = jwt.verify(token, "Blogging-Site", (err, decode) => {
+            if (err) {
+                return res.status(400).send({ status: false, message: "Token is not correct!" })
+            } (decode == true)
+            next()
+        })
     } catch (error) {
         res.status(500).send({ status: false, message: error.message })
     }
@@ -32,7 +35,7 @@ const authorization = async function (req, res, next) {
             }
             return next()
         }
-        console.log(req.params.blogId)
+
         if (req.params.blogId) {
             let blogId = req.params.blogId
             if (!ObjectID.isValid(blogId)) { return res.status(400).send({ status: false, message: "Not a valid BlogID" }) }
@@ -49,14 +52,16 @@ const authorization = async function (req, res, next) {
     }
 }
 
-
+//when user do not authorID for deletion in query params
 const delWithoutID = async function (req, res, next) {
     try {
         let { authorId, category, tags, subcategory, isPublished } = req.query
         let AuthorID = decodedToken.authorId
+        token = req.headers['x-api-key']
+        decodedToken = jwt.verify(token, "Blogging-Site")
         if (req.query.authorId) {
             if (AuthorID != authorId) {
-                return res.status(403).send({ status: false, nesssage: " You are not authorized " })
+                return res.status(403).send({ status: false, messsage: " You are not authorized " })
             }
         }
         let filter = { isDeleted: false, authorId: AuthorID }
@@ -76,37 +81,5 @@ const delWithoutID = async function (req, res, next) {
     }
 }
 
-
-let fucntionForDeleteFilter = async function (req,res ,next){
-    try{
-        let obj = req.query
-        let { authorId, category, tags, subcategory, isPublished } = obj
-    let token = req.headers['x-api-key']
-    let ObjectID = mongoose.Types.ObjectId
-    let decodedToken = jwt.verify(token, "Blogging-Site")
-    let AuthorID = decodedToken.authorId
-    if(req.query.authorId ){
-        if(AuthorID != req.query.authorId) return res.status(403).send({status : false, nesssage: " Youare not authorised "})
-    }
-     
-    let filter = { isDeleted: false , authorId : AuthorID}
-    if (authorId != null) { filter.authorId = authorId }
-    if (category != null) { filter.category = category }
-    if (tags != null) { filter.tags = { $in: [tags] } }
-    if (subcategory != null) { filter.subcategory = { $in: [subcategory] } }
-    if (isPublished != null) { filter.isPublished = isPublished }
-    let filtered = await blogModel.find(filter)
-    if (filtered.length == 0) {
-         return res.status(400).send({ status: false, message: "No such data found" })
-    } else {
-        next()
-        
-    }
-}
-catch (error) {
-    res.status(500).send({ status: false, message: error.message })
-}
-
-}
 
 module.exports = { authentication, authorization, delWithoutID }

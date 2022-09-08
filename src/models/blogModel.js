@@ -3,43 +3,43 @@ const ObjectId = mongoose.Schema.Types.ObjectId
 const typemix = mongoose.Schema.Types.Mixed
 const blogSchema = new mongoose.Schema({
     title: {
-        type : String,
-        required : true
+        type: String,
+        required: true
     },
-    body : {
-        type : String,
-        required : true
+    body: {
+        type: String,
+        required: true
     },
-    authorId : {
-        type : ObjectId,
-        ref : "authorsName",
-        required : true       
+    authorId: {
+        type: ObjectId,
+        ref: "authorsName",
+        required: true
     },
     tags: {
-        type : typemix
+        type: [String]
     },
-    category : {
-        type : String,
-        required : true
+    category: {
+        type: String,
+        required: true
     },
-    subcategory : {
-        type: typemix
+    subcategory: {
+        type: [String]
     },
-    isDeleted : {
-        type : Boolean,
-        default : false
+    isDeleted: {
+        type: Boolean,
+        default: false
     },
-    isPublished : {
-        type : Boolean,
-        default : false
+    isPublished: {
+        type: Boolean,
+        default: false
     },
-    publishedAt :{
-        type : Date,
+    publishedAt: {
+        type: Date,
     },
-    deletedAt :{
-        type : Date
+    deletedAt: {
+        type: Date
     }
 
-}, { timestamps : true});
+}, { timestamps: true });
 
 module.exports = mongoose.model('blogName', blogSchema)
