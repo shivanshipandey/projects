@@ -5,7 +5,8 @@ const blogModel = require('../models/blogModel');
 
 let token
 let decodedToken
-//Authentication
+
+//AUTHENTICATION
 
 const authentication = async function (req, res, next) {
     try {
@@ -22,11 +23,14 @@ const authentication = async function (req, res, next) {
     }
 }
 
-//Authorization
+//AUTHORIZATION
 
 const authorization = async function (req, res, next) {
     try {
         let ObjectID = mongoose.Types.ObjectId
+
+        // checking when the details are to be filled in query section
+
         if (req.query.authorId) {
             let authorId = req.query.authorId
             let decodedToken = jwt.verify(token, "Blogging-Site")
@@ -36,6 +40,8 @@ const authorization = async function (req, res, next) {
             }
             return next()
         }
+
+        // checking when the details are to be filled in path params
 
         if (req.params.blogId) {
             let blogId = req.params.blogId
@@ -53,7 +59,8 @@ const authorization = async function (req, res, next) {
     }
 }
 
-//when user do not authorID for deletion in query params
+// Deleting the blog when the credentials are to be filled in query section and we are repeating the process of Authorization, and generating authorId
+
 const delWithoutID = async function (req, res, next) {
     try {
         let { authorId, category, tags, subcategory, isPublished } = req.query

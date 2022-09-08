@@ -7,10 +7,13 @@ const authorModel = require('../models/authorModel')
 let isValid = mongoose.Types.ObjectId.isValid
 let time = moment().format()
 
-//Create Blog
+//CREATE BLOG
 
 const createBlog = async function (req, res) {
      try {
+
+          // Inserting credentials is mandatory
+
           let { title, body, authorId, category, isPublished } = req.body
           if (!title) {
                return res.status(400).send({ status: false, message: "title is required" })
@@ -32,17 +35,25 @@ const createBlog = async function (req, res) {
                return res.status(404).send({ status: false, message: "No such authorID found" })
           }
 
+          // Title should be in Strings only
+
           if (typeof (title) != "string") {
                return res.status(400).send({status: false, message: "Give title only in a String." })
-          } if (typeof (body) != "string") {
+          }
+          
+          // Body should be in strings only
+          if (typeof (body) != "string") {
                return res.status(400).send({status: false, message: "Give body only in a String."})
           }
+
+          // categories should be in Strings only
           if (typeof (category) != "string") {
                return res.status(400).send({ status: false, message: "Give category only in a String." })
           } if (typeof (isPublished) != "boolean") {
                return res.status(400).send({ status: false, message: "isPublished can be true or false only" })
           }
 
+          //Here's the creation of blog
           if (isPublished == true) { req.body.publishedAt = time }
           let blogStored = await blogModel.create(req.body)
           res.status(201).send({ status: true, message: blogStored, })
@@ -52,13 +63,17 @@ const createBlog = async function (req, res) {
      }
 }
 
-//get Blogs
+//GET BLOGS
+
 const getBlogs = async function (req, res) {
      try {
           let obj = req.query
           let { authorId, category, tags, subcategory } = obj
           if (Object.keys(obj).length != 0) {
                if (authorId) {
+                    
+                    // checking whether authorId is valid or not
+
                     if (!isValid(authorId)) {
                          return res.status(400).send({ status: false, message: "Not a valid Author ID" })
                     }
@@ -88,7 +103,7 @@ const getBlogs = async function (req, res) {
 }
 
 
-//update Blogs
+//UPDATE BLOG
 
 const updateBlog = async function (req, res) {
      try {
@@ -116,7 +131,7 @@ const updateBlog = async function (req, res) {
 }
 
 
-//Delete Blogs by Params
+//DELETE BLOGS BY PATH PARAMS
 
 const deleteByBlogID = async (req, res) => {
 
@@ -138,10 +153,13 @@ const deleteByBlogID = async (req, res) => {
 }
 
 
-//Delete Blogs by Query  
+//DELETE BLOGS BY QUERY PARAMS  
 
 const deleteByFilter = async function (req, res) {
      try {
+
+          // parameters are mandatory to be filled in query section
+          
           let obj = req.query
           let { authorId, category, tags, subcategory, isPublished } = obj
           if (Object.keys(obj).length === 0) {
