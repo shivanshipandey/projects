@@ -25,6 +25,7 @@ router.delete("/blogs", commonMW.authentication, commonMW.delWithoutID, blogCont
 //Login Author
 router.post('/login', authorController.loginAuthor)
 
+//will be performed when any of API wouldn't work
 
 router.all("/*", function (req, res) {
     res.status(404).send({
