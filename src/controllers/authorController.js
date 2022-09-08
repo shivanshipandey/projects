@@ -9,35 +9,24 @@ const createAuthor = async function (req, res) {
           let { fname, lname, title, email, password } = req.body
           //let compare = ['fname', 'lname', 'title', 'email', 'password']
           let arr = Object.keys(req.body)
-
           if (!fname) {
-               return res.status(400).send({
-                    status: false,
-                    message: "fname is required."
+               return res.status(400).send({status: false, message: "fname is required."
                })
           }
           if (!lname) {
-               return res.status(400).send({
-                    status: false,
-                    message: "lname is required."
+               return res.status(400).send({status: false, message: "lname is required."
                })
           }
           if (!title) {
-               return res.status(400).send({
-                    status: false,
-                    message: "title is required."
+               return res.status(400).send({status: false, message: "title is required."
                })
           }
           if (!email) {
-               return res.status(400).send({
-                    status: false,
-                    message: "email is required."
+               return res.status(400).send({status: false, message: "email is required."
                })
           }
           if (!password) {
-               return res.status(400).send({
-                    status: false,
-                    message: "password is required."
+               return res.status(400).send({status: false, message: "password is required."
                })
           }
 
@@ -56,48 +45,40 @@ const createAuthor = async function (req, res) {
                })
           }
 
-          let check1 = /^[a-zA-Z ]+$/.test(fname)
-          let check2 = /^[a-zA-Z ]+$/.test(lname)
-          if (check1 == false || check2 == false) {
+          let firstName = /^[a-zA-Z ]+$/.test(fname)
+          let lastName = /^[a-zA-Z ]+$/.test(lname)
+          
+          if(req.body.title === "Mr" || req.body.title === "Miss" ||  req.body.title ==="Mrs")
+          {         
+          if (firstName == false || lastName == false) {
                return res.status(400).send({
                     status: false,
                     message: "Please enter letters only, don't enter special characters or digits"
                })
           }
           if (fname.includes(" ") || lname.includes(" ")) {
-               return res.status(400).send({
-                    status: false,
-                    message: "Space is not allowed"
+               return res.status(400).send({status: false, message: "Space is not allowed"
                })
           }
 
           if (req.body.title === "Mr" || req.body.title === "Miss" || req.body.title === "Mrs") {
-
                if (!validator.isEmail(email)) {
-                    return res.status(400).send({
-                         status: false,
-                         message: "Please enter valid e-mail id"
+                    return res.status(400).send({ status: false, message: "Please enter valid e-mail id"
                     })
                }
 
                if (typeof (password) != "String") {
-                    return res.status(400).send({
-                         status: false,
-                         message: "Give Password only in a String."
+                    return res.status(400).send({status: false, message: "Give Password only in a String."
                     })
                }
                if (password.length < 8) {
-                    return res.send({
-                         status: false,
-                         message: "Password length must be minimum 8 characters"
+                    return res.send({status: false, message: "Password length must be minimum 8 characters"
                     })
                }
 
                let checkemail = await authorModel.findOne({ email: email })
                if (checkemail) {
-                    return res.status(409).send({
-                         status: false,
-                         message: "this e-mail id is already registered"
+                    return res.status(409).send({status: false, message: "this e-mail id is already registered"
                     })
                }
 
@@ -118,7 +99,7 @@ const createAuthor = async function (req, res) {
                     message: "Title can be  Mr,  Miss,  Mrs only."
                })
           }
-     }
+     }}
      catch (error) {
           res.status(500).send({
                status: false,
@@ -133,24 +114,18 @@ const loginAuthor = async function (req, res) {
      try {
           let { email, password } = req.body
           if (!email) {
-               return res.status(400).send({
-                    status: false,
-                    message: "EmailId is mandatory"
+               return res.status(400).send({status: false, message: "EmailId is mandatory"
                })
           }
           if (!password) {
-               return res.status(400).send({
-                    status: false,
-                    message: "Password is mandatory"
+               return res.status(400).send({status: false, message: "Password is mandatory"
                })
           }
           let authorCheck = await authorModel.findOne({
                email: email,
                password: password
           });
-          if (!authorCheck) return res.status(400).send({
-               status: false,
-               message: "EmailId or password is incorrect"
+          if (!authorCheck) return res.status(400).send({status: false, message: "EmailId or password is incorrect"
           })
           let token = jwt.sign(
                {
@@ -160,15 +135,10 @@ const loginAuthor = async function (req, res) {
                },
                "Blogging-Site"
           );
-          return res.status(201).send({
-               status: true,
-               message: token
-          })
+          return res.status(201).send({status: true, message: token})
      }
      catch (error) {
-          res.status(500).send({
-               status: false,
-               message: error.message
+          res.status(500).send({status: false, message: error.message
           })
      }
 }

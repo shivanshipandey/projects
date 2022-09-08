@@ -33,13 +33,9 @@ const createBlog = async function (req, res) {
           }
 
           if (typeof (title) != "string") {
-               return res.status(400).send({
-                    status: false, message: "Give title only in a String."
-               })
+               return res.status(400).send({status: false, message: "Give title only in a String." })
           } if (typeof (body) != "string") {
-               return res.status(400).send({
-                    status: false, message: "Give body only in a String."
-               })
+               return res.status(400).send({status: false, message: "Give body only in a String."})
           }
           if (typeof (category) != "string") {
                return res.status(400).send({ status: false, message: "Give category only in a String." })
@@ -47,9 +43,7 @@ const createBlog = async function (req, res) {
                return res.status(400).send({ status: false, message: "isPublished can be true or false only" })
           }
 
-          if (isPublished == true) {
-               req.body.publishedAt = time
-          }
+          if (isPublished == true) { req.body.publishedAt = time }
           let blogStored = await blogModel.create(req.body)
           res.status(201).send({ status: true, message: blogStored, })
      }

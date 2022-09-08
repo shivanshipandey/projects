@@ -37,6 +37,7 @@ const authorization = async function (req, res, next) {
         }
 
         if (req.params.blogId) {
+            let decodedToken = jwt.verify(token, "Blogging-Site")
             let blogId = req.params.blogId
             if (!ObjectID.isValid(blogId)) { return res.status(400).send({ status: false, message: "Not a valid BlogID" }) }
             let check = await blogModel.findById(blogId)
@@ -81,5 +82,6 @@ const delWithoutID = async function (req, res, next) {
     }
 }
 
+// next function for delete api **********************************************************
 
 module.exports = { authentication, authorization, delWithoutID }
