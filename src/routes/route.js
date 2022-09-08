@@ -25,6 +25,7 @@ router.delete("/blogs",commonMW.authentication, commonMW.fucntionForDeleteFilter
 //Login Author
 router.post('/login',authorController.loginAuthor)
 
+
 router.all("/*", function (req, res) {
     res.status(404).send({  status: false,   message: "Make Sure Your Endpoint is Correct !!!" })
 })
