@@ -37,7 +37,6 @@ const authorization = async function (req, res, next) {
 
         if (req.query.authorId) {
             let authorId = req.query.authorId
-            //let decodedToken = jwt.verify(token, "Blogging-Site")
             if (!ObjectID.isValid(authorId)) { return res.status(400).send({ status: false, message: "Not a valid AuthorID" }) }
             if (authorId != decodedToken.authorId) {
                 return res.status(403).send({ status: false, message: "You are not a authorized user" })
@@ -64,26 +63,6 @@ const authorization = async function (req, res, next) {
     }
 }
 
-// Deleting the blog when the credentials are to be filled in query section and we are repeating the process of Authorization, and generating authorId
-
-// const delWithoutID = async function (req, res, next) {
-//     try {
-//         token = req.headers['x-api-key']
-//         decodedToken = jwt.verify(token, "Blogging-Site")
-//         let { authorId } = req.query
-//         let AuthorID = decodedToken.authorId
-//         if (req.query.authorId) {
-//             if (AuthorID != authorId) {
-//                 return res.status(403).send({ status: false, messsage: " You are not authorized " })
-//             }
-//         }
-
-//         next()
-//     }
-//     catch (error) {
-//         res.status(500).send({ status: false, message: error.message })
-//     }
-// }
 
 
 module.exports = { authentication, authorization }

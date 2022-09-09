@@ -179,7 +179,6 @@ const deleteByFilter = async function (req, res) {
      try {
 
           // parameters are mandatory to be filled in query section
-          console.log(req.decode)
           let obj = req.query
           let { authorId, category, tags, subcategory, isPublished } = obj
 
@@ -200,7 +199,6 @@ const deleteByFilter = async function (req, res) {
           if (isPublished != null) { filter.isPublished = isPublished }
 
           let filtered = await blogModel.find(filter)
-          //console.log(filtered)
           if (filtered.length == 0) {
                return res.status(400).send({ status: false, message: "No such data found" })
           } else {
