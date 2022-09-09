@@ -89,11 +89,15 @@ const getBlogs = async function (req, res) {
      try {
           let obj = req.query
           let { authorId, category, tags, subcategory } = obj
+
+          if (Object.keys(obj).length === 0 ) {
+               return res.status(400).send({ status: false, message: "Please give some parameters to check" })
+          }
+        
           if (Object.keys(obj).length != 0) {
                if (authorId) {
-
+               
                     // checking whether authorId is valid or not
-
                     if (!isValid(authorId)) {
                          return res.status(400).send({ status: false, message: "Not a valid Author ID" })
                     }
