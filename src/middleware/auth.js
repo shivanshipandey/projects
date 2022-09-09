@@ -29,8 +29,6 @@ const authentication = async function (req, res, next) {
 
 const authorization = async function (req, res, next) {
     try {
-        token = req.headers['x-api-key']
-        decodedToken = jwt.verify(token, "Blogging-Site")
         let ObjectID = mongoose.Types.ObjectId
 
         // checking when the details are to be filled in query section
@@ -38,7 +36,7 @@ const authorization = async function (req, res, next) {
         if (req.query.authorId) {
             let authorId = req.query.authorId
             if (!ObjectID.isValid(authorId)) { return res.status(400).send({ status: false, message: "Not a valid AuthorID" }) }
-            if (authorId != decodedToken.authorId) {
+            if (authorId != req.decode.authorId) {
                 return res.status(403).send({ status: false, message: "You are not a authorized user" })
             }
             return next()
@@ -51,7 +49,7 @@ const authorization = async function (req, res, next) {
             if (!ObjectID.isValid(blogId)) { return res.status(400).send({ status: false, message: "Not a valid BlogID" }) }
             let check = await blogModel.findById(blogId)
             if (!check) { return res.status(404).send({ status: false, message: "No such blog exists" }) }
-            if (check.authorId != decodedToken.authorId) {
+            if (check.authorId != req.decode.authorId) {
                 return res.status(403).send({ status: false, message: "You are not a authorized user" })
             }
             return next()

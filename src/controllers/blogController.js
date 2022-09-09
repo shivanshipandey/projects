@@ -94,11 +94,15 @@ const getBlogs = async function (req, res) {
      try {
           let obj = req.query
           let { authorId, category, tags, subcategory } = obj
+
+          if (Object.keys(obj).length === 0 ) {
+               return res.status(400).send({ status: false, message: "Please give some parameters to check" })
+          }
+        
           if (Object.keys(obj).length != 0) {
                if (authorId) {
-
+               
                     // checking whether authorId is valid or not
-
                     if (!isValid(authorId)) {
                          return res.status(400).send({ status: false, message: "Not a valid Author ID" })
                     }
@@ -187,21 +191,22 @@ const deleteByFilter = async function (req, res) {
           let obj = req.query
           let { authorId, category, tags, subcategory, isPublished } = obj
 
-          if (Object.keys(obj).length === 0 ) {
+          if (Object.keys(obj).length === 0) {
                return res.status(400).send({ status: false, message: "Please give some parameters to check" })
           }
+          let check = ["true","false"]
           if (isPublished) {
-               if (isPublished != "boolean") { return res.status(400).send({ status: false, message: "Please give true or false value to isPublished" }) }
+               if (!check.includes(isPublished)) { return res.status(400).send({ status: false, message: "Please give true or false value to isPublished" }) }
           }
-
           let filter = {}
-          filter = { isDeleted: false, authorId: req.decode.authorId }
-          if (authorId) { filter = { isDeleted: false, authorId: authorId } }
-          if (authorId != null) { filter.authorId = authorId }
-          if (category != null) { filter.category = category }
-          if (tags != null) { filter.tags = tags }
-          if (subcategory != null) { filter.subcategory = subcategory }
-          if (isPublished != null) { filter.isPublished = isPublished }
+          if (authorId) { filter.authorId = authorId }
+          if (category) { filter.category = category }
+          if (tags) { filter.tags = tags }
+          if (subcategory) { filter.subcategory = subcategory }
+          if (check.includes(isPublished)) { filter.isPublished = Boolean(isPublished) }
+          if(!Object.keys(filter).length) return res.status(400).send({status:false,message:"Please provide some value to the filter"})
+          if(!authorId) filter.authorId = req.decode.authorId
+          filter.isDeleted = false;
 
           let filtered = await blogModel.find(filter)
           if (filtered.length == 0) {
