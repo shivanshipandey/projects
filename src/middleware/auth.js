@@ -15,7 +15,9 @@ const authentication = async function (req, res, next) {
         decodedToken = jwt.verify(token, "Blogging-Site", (err, decode) => {
             if (err) {
                 return res.status(400).send({ status: false, message: "Token is not correct!" })
-            } (decode == true)
+            }
+             req.decode = decode
+            
             next()
         })
     } catch (error) {
@@ -27,13 +29,14 @@ const authentication = async function (req, res, next) {
 
 const authorization = async function (req, res, next) {
     try {
+        token = req.headers['x-api-key']
+        decodedToken = jwt.verify(token, "Blogging-Site")
         let ObjectID = mongoose.Types.ObjectId
 
         // checking when the details are to be filled in query section
 
         if (req.query.authorId) {
             let authorId = req.query.authorId
-            let decodedToken = jwt.verify(token, "Blogging-Site")
             if (!ObjectID.isValid(authorId)) { return res.status(400).send({ status: false, message: "Not a valid AuthorID" }) }
             if (authorId != decodedToken.authorId) {
                 return res.status(403).send({ status: false, message: "You are not a authorized user" })
@@ -53,63 +56,6 @@ const authorization = async function (req, res, next) {
             }
             return next()
         }
-    }
-    catch (error) {
-        res.status(500).send({ status: false, message: error.message })
-    }
-}
-
-// Deleting the blog when the credentials are to be filled in query section and we are repeating the process of Authorization, and generating authorId
-
-const delWithoutID = async function (req, res, next) {
-    try {
-        let { authorId, category, tags, subcategory, isPublished } = req.query
-        token = req.headers['x-api-key']
-         decodedToken = jwt.verify(token, "Blogging-Site")
-        // token = req.headers['x-api-key']
-        let AuthorID = decodedToken.authorId
-        //console.log(authorId, AuthorID)
-
-
-
-      
-        if (req.query.authorId) {
-            if (AuthorID != authorId) {
-                return res.status(403).send({ status: false, messsage: " You are not authorized " })
-            }
-        }
-
-
-
-      
-        let filter = { isDeleted: false, authorId: AuthorID }
-        if (authorId != null) { filter.authorId = authorId }
-        if (category != null) { filter.category = category }
-        if (tags != null) { filter.tags = { $in: [tags] } }
-        if (subcategory != null) { filter.subcategory = { $in: [subcategory] } }
-        if (isPublished != null) { filter.isPublished = isPublished }
-
-
-      
-        let searchingAuthorId = await blogModel.findOne(filter)
-        let AuthorIdReceived = searchingAuthorId.authorId
-        console.log(AuthorIdReceived)
-  
-        //if(searchingAuthorId != null) { filter.authorId = AuthorIdReceived}
-        if(AuthorIdReceived == null)  { res.send("no id found ")} 
-   
-       
-            if (AuthorID != AuthorIdReceived) {
-                return res.status(403).send({ status: false, messsage: " You are not authorized " })
-            }
-    
-
-        let filtered = await blogModel.find(filter)
-        console.log(filter)
-        if (!filtered.length) {
-            return res.status(400).send({ status: false, message: "No such data found" })
-        }
-
         next()
     }
     catch (error) {
@@ -118,4 +64,5 @@ const delWithoutID = async function (req, res, next) {
 }
 
 
-module.exports = { authentication, authorization, delWithoutID }
+
+module.exports = { authentication, authorization }
