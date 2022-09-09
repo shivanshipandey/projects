@@ -22,6 +22,7 @@ router.delete('/blogs/:blogId', commonMW.authentication, commonMW.authorization,
 // DELETE /blogs?queryParams
 router.delete("/blogs", commonMW.authentication, commonMW.delWithoutID, blogController.deleteByFilter)
 
+
 //Login Author
 router.post('/login', authorController.loginAuthor)
 

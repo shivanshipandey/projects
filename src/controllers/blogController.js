@@ -98,7 +98,7 @@ const getBlogs = async function (req, res) {
                          return res.status(400).send({ status: false, message: "Not a valid Author ID" })
                     }
                }
-               let filter = { isPublished: true, isDeleted: false }
+               let filter = { isPublished: true, isDeleted: false}
                if (authorId != null) { filter.authorId = authorId }
                if (category != null) { filter.category = category }
                if (tags != null) { filter.tags = { $in: [tags] } }
@@ -185,7 +185,7 @@ const deleteByFilter = async function (req, res) {
           if (Object.keys(obj).length === 0) {
                return res.status(400).send({ status: false, message: "Please give some parameters to check" })
           }
-          let filter = { isDeleted: false }
+          let filter = { isDeleted: false}
           if (authorId != null) { filter.authorId = authorId }
           if (category != null) { filter.category = category }
           if (tags != null) { filter.tags = tags }
