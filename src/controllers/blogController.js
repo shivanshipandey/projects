@@ -38,18 +38,18 @@ const createBlog = async function (req, res) {
           // Title should be in Strings only
 
           if (typeof (title) != "string") {
-               return res.status(400).send({status: false, message: "Give title only in a String." })
+               return res.status(400).send({ status: false, message: "Give title only in a String." })
           }
-          
+
           // Body should be in strings only
           if (typeof (body) != "string") {
-               return res.status(400).send({status: false, message: "Give body only in a String."})
+               return res.status(400).send({ status: false, message: "Give body only in a String." })
           }
 
           //if tags is present then it should be an array
-          if(tags){
-               if(!Array.isArray(tags)){
-                    return res.status(400).send({status: false, message: "Give tags only in a array of String."})
+          if (tags) {
+               if (!Array.isArray(tags)) {
+                    return res.status(400).send({ status: false, message: "Give tags only in a array of String." })
                }
           }
 
@@ -59,19 +59,19 @@ const createBlog = async function (req, res) {
           }
 
           //if subcategory is present then it should be an array
-          if(subcategory){
-               if(!Array.isArray(subcategory)){
-                    return res.status(400).send({status: false, message: "Give subcategory only in a array of String."})
+          if (subcategory) {
+               if (!Array.isArray(subcategory)) {
+                    return res.status(400).send({ status: false, message: "Give subcategory only in a array of String." })
                }
           }
 
           //if isPublished is present then it should be Boolean
-          if(isPublished){
+          if (isPublished) {
                if (typeof (isPublished) != "boolean") {
                     return res.status(400).send({ status: false, message: "isPublished can be true or false only" })
                }
           }
-          
+
 
           //Here's the creation of blog
           if (isPublished == true) { req.body.publishedAt = time }
@@ -91,14 +91,14 @@ const getBlogs = async function (req, res) {
           let { authorId, category, tags, subcategory } = obj
           if (Object.keys(obj).length != 0) {
                if (authorId) {
-                    
+
                     // checking whether authorId is valid or not
 
                     if (!isValid(authorId)) {
                          return res.status(400).send({ status: false, message: "Not a valid Author ID" })
                     }
                }
-               let filter = { isPublished: true, isDeleted: false}
+               let filter = { isPublished: true, isDeleted: false }
                if (authorId != null) { filter.authorId = authorId }
                if (category != null) { filter.category = category }
                if (tags != null) { filter.tags = { $in: [tags] } }
@@ -179,19 +179,28 @@ const deleteByFilter = async function (req, res) {
      try {
 
           // parameters are mandatory to be filled in query section
-          
+          console.log(req.decode)
           let obj = req.query
           let { authorId, category, tags, subcategory, isPublished } = obj
-          if (Object.keys(obj).length === 0) {
+
+          if (Object.keys(obj).length === 0 ) {
                return res.status(400).send({ status: false, message: "Please give some parameters to check" })
           }
-          let filter = { isDeleted: false}
+          if (isPublished) {
+               if (isPublished != "boolean") { return res.status(400).send({ status: false, message: "Please give true or false value to isPublished" }) }
+          }
+
+          let filter = {}
+          filter = { isDeleted: false, authorId: req.decode.authorId }
+          if (authorId) { filter = { isDeleted: false, authorId: authorId } }
           if (authorId != null) { filter.authorId = authorId }
           if (category != null) { filter.category = category }
           if (tags != null) { filter.tags = tags }
           if (subcategory != null) { filter.subcategory = subcategory }
           if (isPublished != null) { filter.isPublished = isPublished }
+
           let filtered = await blogModel.find(filter)
+          //console.log(filtered)
           if (filtered.length == 0) {
                return res.status(400).send({ status: false, message: "No such data found" })
           } else {

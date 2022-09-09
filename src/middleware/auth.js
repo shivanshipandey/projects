@@ -15,7 +15,9 @@ const authentication = async function (req, res, next) {
         decodedToken = jwt.verify(token, "Blogging-Site", (err, decode) => {
             if (err) {
                 return res.status(400).send({ status: false, message: "Token is not correct!" })
-            } (decode == true)
+            }
+             req.decode = decode
+            
             next()
         })
     } catch (error) {
@@ -55,6 +57,7 @@ const authorization = async function (req, res, next) {
             }
             return next()
         }
+        next()
     }
     catch (error) {
         res.status(500).send({ status: false, message: error.message })
@@ -63,34 +66,24 @@ const authorization = async function (req, res, next) {
 
 // Deleting the blog when the credentials are to be filled in query section and we are repeating the process of Authorization, and generating authorId
 
-const delWithoutID = async function (req, res, next) {
-    try {
-        token = req.headers['x-api-key']
-        decodedToken = jwt.verify(token, "Blogging-Site")
-        let { authorId, category, tags, subcategory, isPublished } = req.query
-        let AuthorID = decodedToken.authorId
-        if (req.query.authorId) {
-            if (AuthorID != authorId) {
-                return res.status(403).send({ status: false, messsage: " You are not authorized " })
-            }
-        }
-        let filter = { isDeleted: false, authorId: AuthorID }
-        if (authorId != null) { filter.authorId = authorId }
-        if (category != null) { filter.category = category }
-        if (tags != null) { filter.tags = { $in: [tags] } }
-        if (subcategory != null) { filter.subcategory = { $in: [subcategory] } }
-        if (isPublished != null) { filter.isPublished = isPublished }
-        let filtered = await blogModel.find(filter)
-        if (!filtered.length) {
-            return res.status(400).send({ status: false, message: "No such data found" })
-        }
+// const delWithoutID = async function (req, res, next) {
+//     try {
+//         token = req.headers['x-api-key']
+//         decodedToken = jwt.verify(token, "Blogging-Site")
+//         let { authorId } = req.query
+//         let AuthorID = decodedToken.authorId
+//         if (req.query.authorId) {
+//             if (AuthorID != authorId) {
+//                 return res.status(403).send({ status: false, messsage: " You are not authorized " })
+//             }
+//         }
 
-        next()
-    }
-    catch (error) {
-        res.status(500).send({ status: false, message: error.message })
-    }
-}
+//         next()
+//     }
+//     catch (error) {
+//         res.status(500).send({ status: false, message: error.message })
+//     }
+// }
 
 
-module.exports = { authentication, authorization, delWithoutID }
+module.exports = { authentication, authorization }
