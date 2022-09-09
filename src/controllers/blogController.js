@@ -199,7 +199,7 @@ const deleteByFilter = async function (req, res) {
           if (tags) { filter.tags = tags }
           if (subcategory) { filter.subcategory = subcategory }
           if (check.includes(isPublished)) { filter.isPublished = Boolean(isPublished) }
-          if(!Object.keys(filter).length) return res.status(400).send({status:false,message:"Please provide a valid filter"})
+          if(!Object.keys(filter).length) return res.status(400).send({status:false,message:"Please provide some value to the filter"})
           if(!authorId) filter.authorId = req.decode.authorId
           filter.isDeleted = false;
 
