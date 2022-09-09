@@ -182,6 +182,8 @@ const deleteByFilter = async function (req, res) {
           
           let obj = req.query
           let { authorId, category, tags, subcategory, isPublished } = obj
+
+
           if (Object.keys(obj).length === 0) {
                return res.status(400).send({ status: false, message: "Please give some parameters to check" })
           }
@@ -191,7 +193,16 @@ const deleteByFilter = async function (req, res) {
           if (tags != null) { filter.tags = tags }
           if (subcategory != null) { filter.subcategory = subcategory }
           if (isPublished != null) { filter.isPublished = isPublished }
+
+          let searchingAuthorId = await blogModel.findOne(filter)
+          let AuthorIdReceived = searchingAuthorId.authorId
+         // console.log(AuthorIdReceived)
+    
+          if(AuthorIdReceived != null) { filter.authorId = AuthorIdReceived}
+          if(AuthorIdReceived == null)  { res.send("no id found ")} 
+
           let filtered = await blogModel.find(filter)
+          console.log(filtered)
           if (filtered.length == 0) {
                return res.status(400).send({ status: false, message: "No such data found" })
           } else {
