@@ -64,21 +64,46 @@ const authorization = async function (req, res, next) {
 const delWithoutID = async function (req, res, next) {
     try {
         let { authorId, category, tags, subcategory, isPublished } = req.query
-        decodedToken = jwt.verify(token, "Blogging-Site")
-        let AuthorID = decodedToken.authorId
         token = req.headers['x-api-key']
-        console.log(authorId, AuthorID)
+         decodedToken = jwt.verify(token, "Blogging-Site")
+        // token = req.headers['x-api-key']
+        let AuthorID = decodedToken.authorId
+        //console.log(authorId, AuthorID)
+
+
+
+      
         if (req.query.authorId) {
             if (AuthorID != authorId) {
                 return res.status(403).send({ status: false, messsage: " You are not authorized " })
             }
         }
+
+
+
+      
         let filter = { isDeleted: false, authorId: AuthorID }
         if (authorId != null) { filter.authorId = authorId }
         if (category != null) { filter.category = category }
         if (tags != null) { filter.tags = { $in: [tags] } }
         if (subcategory != null) { filter.subcategory = { $in: [subcategory] } }
         if (isPublished != null) { filter.isPublished = isPublished }
+
+
+      
+        let searchingAuthorId = await blogModel.findOne(filter)
+        let AuthorIdReceived = searchingAuthorId.authorId
+        console.log(AuthorIdReceived)
+  
+        //if(searchingAuthorId != null) { filter.authorId = AuthorIdReceived}
+        if(AuthorIdReceived == null)  { res.send("no id found ")} 
+   
+       
+            if (AuthorID != AuthorIdReceived) {
+                return res.status(403).send({ status: false, messsage: " You are not authorized " })
+            }
+    
+
         let filtered = await blogModel.find(filter)
         console.log(filter)
         if (!filtered.length) {
