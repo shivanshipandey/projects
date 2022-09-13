@@ -1,0 +1,25 @@
+{
+  "name": "project-internship-group-34",
+  "version": "1.0.0",
+  "description": "Project internship",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arshad026/project-internship-Group-34.git"
+  },
+  "keywords": [],
+  "author": "Md Arshad Ansari, Aakash Ghosh, Gajendra Singh, Shivanshi Panday",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arshad026/project-internship-Group-34/issues"
+  },
+  "homepage": "https://github.com/arshad026/project-internship-Group-34#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mongoose": "^6.6.0",
+    "nodemon": "^2.0.19"
+  }
+}
