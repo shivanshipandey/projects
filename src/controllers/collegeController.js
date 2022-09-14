@@ -27,11 +27,11 @@ const createColleges = async function (req, res) {
         }
        
         if(dataBody.length > 4){
-            res.status(400).send({status: false, mssg : "Only name, fullName, logoLink, and idDeleted are allowed in the request body"})
+           return res.status(400).send({status: false, mssg : "Only name, fullName, logoLink, and idDeleted are allowed in the request body"})
         }
 
         if(name.includes(" ")){
-            res.status(400).send({status : false, msg : "Space is not allowed"})
+           return res.status(400).send({status : false, msg : "Space is not allowed"})
         }
 
         let collegeData = await collegeModel.create(data);
@@ -48,11 +48,22 @@ const getInternsFromColleges = async function (req, res) {
     try {
         let collegeName = req.query.collegeName;
         if (!collegeName) {
-            return res.status(400).send({ status: false, message: "Query is required." })
+            return res.status(400).send({ status: false, message: "Query is required, (only 'collegeName' is allowed)" })
         }
         if (Object.keys(req.query).length > 1) {
             return res.status(400).send({ status: false, message: "enter single query." })
         }
+
+        const isValidName = (value)=> {
+            if(!(value === value.toLowerCase())){
+                return false
+            }
+            return true
+        }
+        if(!isValidName(collegeName)){
+            return res.status(400).send({status: false, message: 'please use the lowercase in query'})
+        }
+
         let isValid = await collegeModel.findOne({ name: collegeName });
         if (!isValid) {
             return res.status(404).send({
@@ -69,7 +80,7 @@ const getInternsFromColleges = async function (req, res) {
             name: name,
             fullName: fullName,
             logoLink: logoLink,
-            interns: [intern.length ? intern : { message: "0 application from this college." }]
+            interns: intern.length ? intern : { message: "0 application from this college." }
         }
         return res.status(200).send({ status: true, data: data })
 

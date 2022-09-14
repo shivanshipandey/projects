@@ -44,7 +44,11 @@ const createInterns = async function (req, res) {
 
        
 
-        let clgName = await collegeModel.findOne({ name: collegeName})
+        if(!collegeName){
+            return res.status(400).send({status: false, message: 'college name is mandatory'})
+        }
+
+        let clgName = await collegeModel.findOne({ name: collegeName.toString()})
         if (!clgName) {
             return res.status(400).send({ status: false, message: "collegeName does not exist" })
     }
