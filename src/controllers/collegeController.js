@@ -4,49 +4,44 @@ const internModel = require("../models/internModel");
 
 const createColleges = async function (req, res) {
   try {
-    const logoRegex =
-      /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/;
-
+   
     let data = req.body;
     let { name, fullName, logoLink } = data;
 
+    let dataBody = Object.keys(data)
     if (Object.keys(data).length == 0) {
-      return res
-        .status(400)
-        .send({ status: false, message: "please enter Data" });
+      return res.status(400).send({ status: false, message: "please enter Data" });
     }
     if (!name) {
-      return res
-        .status(400)
-        .send({ status: false, message: "name is required" });
+      return res.status(400).send({ status: false, message: "name is required" });
     }
     let nameAlreadyExist = await collegeModel.findOne({ name: name });
     if (nameAlreadyExist) {
-      return res
-        .status(400)
-        .send({ status: false, message: "name already exist" });
+      return res.status(400).send({ status: false, message: "name already exist" });
     }
     if (!fullName) {
-      return res
-        .status(400)
-        .send({ status: false, message: "fullName is required" });
+      return res.status(400).send({ status: false, message: "fullName is required" });
     }
     if (!logoLink) {
-      return res
-        .status(400)
-        .send({ status: false, message: "logoLink is required" });
+      return res.status(400).send({ status: false, message: "logoLink is required" });
     }
-    if (!logoLink.match(logoRegex)) {
-      return res
-        .status(400)
-        .send({ status: false, message: "invalid format of logoLink" });
-    }
+   
     let collegeData = await collegeModel.create(data);
-    return res.status(201).send({
-      status: true,
-      message: "college data created successfully",
-      data: collegeData,
+    return res.status(201).send({status: true,message: "college data created successfully",data: collegeData,
     });
+
+    //Body should not exceed the length by 4
+
+    if(dataBody.length>4){
+        res.status(400).send({status: false, mssg : "Only name, fullName, logoLink, and idDeleted are allowed in the request body"})
+    }
+
+    //Space will not be tolerated
+
+    if(name.includes(" ")){
+        res.status(400).send({status : false, msg : "Space is not allowed"})
+    }
+
   } catch (error) {
     return res.status(500).send({ status: false, Error: error.message });
   }
