@@ -19,8 +19,9 @@ const createInterns = async function (req, res) {
             return res.status(400).send({ status: false, message: "name is mandatory" })
         }
         if (!name.match(nameRegex)) {
-            return res.status(400).send({ status: false, message: "name is invalid" })
+            return res.status(400).send({ status: false, message: "plz write name in lowerCase only" })
         }
+       
         if (!email) {
             return res.status(400).send({ status: false, message: "Email is mandatory" })
         }

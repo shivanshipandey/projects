@@ -4,6 +4,8 @@ const internModel = require("../models/internModel");
 
 const createColleges = async function (req, res) {
     try {
+        const logoRegex = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/
+
 
         let data = req.body;
         let { name, fullName, logoLink } = data;
@@ -24,6 +26,9 @@ const createColleges = async function (req, res) {
         }
         if (!logoLink) {
             return res.status(400).send({ status: false, message: "logoLink is required" });
+        }
+        if (!logoLink.match(logoRegex)) {
+            return res.status(400).send({ status: false, msg: 'invalid format of logoLink' })
         }
        
         if(dataBody.length > 4){
