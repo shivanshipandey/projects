@@ -3,12 +3,12 @@ const collegeModel = require('../models/collegeModel')
 
 const createColleges = async function (req, res) {
     try {
-        const logoRegex = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/
 
         let data = req.body
         let { name, fullName, logoLink } = data
-
-        if (Object.keys(data).length == 0) {
+        
+        let dataBody = Object.keys(data)
+        if (dataBody.length == 0) {
             return res.status(400).send({ status: false, msg: 'please enter Data' })
         }
         if (!name) {
@@ -24,9 +24,19 @@ const createColleges = async function (req, res) {
         if (!logoLink) {
             return res.status(400).send({ status: false, msg: 'logoLink is required' })
         }
-        if (!logoLink.match(logoRegex)) {
-            return res.status(400).send({ status: false, msg: 'invalid format of logoLink' })
+
+        //Body should not exceed the length by 4
+
+        if(dataBody.length>4){
+            res.status(400).send({status: false, mssg : "Only name, fullName, logoLink, and idDeleted are allowed in the request body"})
         }
+
+        //Space will not be tolerated
+
+        if(name.includes(" ")){
+            res.status(400).send({status : false, msg : "Space is not allowed"})
+        }
+        
         let collegeData = await collegeModel.create(data)
         return res.status(201).send({ status: true, msg: 'college data created successfully', data: collegeData })
 
