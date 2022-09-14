@@ -25,11 +25,6 @@ const createColleges = async function (req, res) {
     if (!logoLink) {
       return res.status(400).send({ status: false, message: "logoLink is required" });
     }
-   
-    let collegeData = await collegeModel.create(data);
-    return res.status(201).send({status: true,message: "college data created successfully",data: collegeData,
-    });
-
     //Body should not exceed the length by 4
 
     if(dataBody.length>4){
@@ -41,6 +36,11 @@ const createColleges = async function (req, res) {
     if(name.includes(" ")){
         res.status(400).send({status : false, msg : "Space is not allowed"})
     }
+       
+    let collegeData = await collegeModel.create(data);
+    return res.status(201).send({status: true,message: "college data created successfully",data: collegeData,
+    });
+
 
   } catch (error) {
     return res.status(500).send({ status: false, Error: error.message });
