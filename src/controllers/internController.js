@@ -41,22 +41,20 @@ const createInterns = async function (req, res) {
         if (mobileAlreadyExist) {
             return res.status(400).send({ status: false, message: "Mobile Number is already exist" })
         }
-        // if (!collegeId) {
-        //     return res.status(400).send({ status: false, message: "CollegeId is mandatory" })
-        // }
-        // if (!mongoose.Types.ObjectId.isValid(collegeId)) {
-        //     return res.status(400).send({ status: false, message: "CollegeId is invalid" })
-        // }
 
-        data.collegeName = " "
+        data['collegeName'] = null
 
-        let clgName = await collegeModel.findOne({ name: collegeName })
+        let clgName = await collegeModel.findOne({ name: collegeName.toString()})
         if (!clgName) {
             return res.status(400).send({ status: false, message: "collegeName does not exist" })
-        
     }
-        
+    
+    if(collegeName){
+        data['collegeId'] = clgName._id
+    }
+
         let internData = await internModel.create(data)
+
         return res.status(201).send({ status: true, message: 'intern data created successfully', data: internData })
 
     } catch (error) {
