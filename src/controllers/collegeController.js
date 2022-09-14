@@ -49,7 +49,7 @@ const createColleges = async function (req, res) {
 
 const getInternsFromColleges = async function (req, res) {
   try {
-    let collegeName = req.query.name;
+    let collegeName = req.query.collegeName;
     if (!collegeName){
         return res.status(400).send({status:false, message:"Query is required."})
     }
@@ -72,7 +72,7 @@ const getInternsFromColleges = async function (req, res) {
         name : name,
         fullName : fullName,
         logoLink : logoLink,
-        interns :[ intern.length? intern : { message: "0 application from this college."}]
+        interns : intern.length? intern : { message: "0 application from this college."}
     }
     return res.status(200).send({status:true, data:data})
 
