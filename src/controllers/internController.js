@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const internModel = require('../models/internModel')
-const CollegeModel = require('../models/collegeModel')
+const collegeModel = require('../models/collegeModel')
+
 const createInterns = async function (req, res) {
     try {
 
@@ -40,18 +41,22 @@ const createInterns = async function (req, res) {
         if (mobileAlreadyExist) {
             return res.status(400).send({ status: false, message: "Mobile Number is already exist" })
         }
-       
-       
 
-        let internData = await CollegeModel.findOne({name : collegeName})
-            if(!internData){
-                   return res.status(400).send({status : false, mssg : "Entered an invalid college Name"})
-            } 
+        data['collegeName'] = null
 
-            const collegeId = internData._id
-            const dataOfIntern = { name, email, mobile, collegeId}
-            const finalData = await internModel.create(dataOfIntern)
-            return res.status(201).send({status: true, mssg : finalData })
+        let clgName = await collegeModel.findOne({ name: collegeName.toString()})
+        if (!clgName) {
+            return res.status(400).send({ status: false, message: "collegeName does not exist" })
+    }
+    
+    if(collegeName){
+        data['collegeId'] = clgName._id
+    }
+
+        let internData = await internModel.create(data)
+
+        return res.status(201).send({ status: true, message: 'intern data created successfully', data: internData })
+
         
     } catch (error) {
         return res.status(500).send({ status: false, Error: error.message })
