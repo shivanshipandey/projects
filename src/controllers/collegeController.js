@@ -63,7 +63,7 @@ const getInternsFromColleges = async function (req, res) {
         }
         const clg = await collegeModel.findOne({ name: collegeName })
         const { name, fullName, logoLink } = clg
-        const intern = await internModel.find({ collegeId: collegeName._id }).select({ name: 1, email: 1, mobile: 1 })
+        const intern = await internModel.find({ collegeId: clg._id }).select({ name: 1, email: 1, mobile: 1 })
 
         const data = {
             name: name,

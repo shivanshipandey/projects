@@ -42,15 +42,15 @@ const createInterns = async function (req, res) {
             return res.status(400).send({ status: false, message: "Mobile Number is already exist" })
         }
 
-        data['collegeName'] = null
+       
 
-        let clgName = await collegeModel.findOne({ name: collegeName.toString()})
+        let clgName = await collegeModel.findOne({ name: collegeName})
         if (!clgName) {
             return res.status(400).send({ status: false, message: "collegeName does not exist" })
     }
     
     if(collegeName){
-        data['collegeId'] = clgName._id
+        data.collegeId = clgName._id
     }
 
         let internData = await internModel.create(data)
