@@ -45,37 +45,36 @@ const createColleges = async function (req, res) {
 };
 
 const getInternsFromColleges = async function (req, res) {
-    try {
-        let collegeName = req.query.collegeName;
-        if (!collegeName) {
-            return res.status(400).send({ status: false, message: "Query is required." })
-        }
-        if (Object.keys(req.query).length > 1) {
-            return res.status(400).send({ status: false, message: "enter single query." })
-        }
-        let isValid = await collegeModel.findOne({ name: collegeName });
-        if (!isValid) {
-            return res.status(404).send({
-                status: false,
-                message:
-                    "No Colleges with this given query. please give a valid college Name",
-            });
-        }
-        const clg = await collegeModel.findOne({ name: collegeName })
-        const { name, fullName, logoLink } = clg
-        const intern = await internModel.find({ collegeId: collegeName._id }).select({ name: 1, email: 1, mobile: 1 })
-
-        const data = {
-            name: name,
-            fullName: fullName,
-            logoLink: logoLink,
-            interns: [intern.length ? intern : { message: "0 application from this college." }]
-        }
-        return res.status(200).send({ status: true, data: data })
-
-    } catch (err) {
-        return res.status(500).send({ status: false, Error: err.message });
+  try {
+    let collegeName = req.query.collegeName;
+    if (!collegeName){
+        return res.status(400).send({status:false, message:"Query is required."})                   
     }
-};
+    if (Object.keys(req.query).length>1){
+        return res.status(400).send({status:false, message:"enter single query." })
+    }
+    let isValid =await collegeModel.findOne({name:collegeName.to});
+    if (!isValid) {
+      return res.status(404).send({
+        status: false,
+        message:
+          "No Colleges with this given query. please give a valid college Name",
+      });
+    }
+    const clg=await collegeModel.findOne({name: collegeName}) 
+    const {name,fullName,logoLink}= clg
+    const intern=await internModel.find({collegeId : clg._id}).select({name:1,email:1,mobile:1})
 
+    const data={
+        name : name,
+        fullName : fullName,
+        logoLink : logoLink,
+        interns :[ intern.length? intern : { message: "0 application from this college."}]
+    }
+    return res.status(200).send({status:true, data:data})
+
+  } catch (err) {
+    return res.status(500).send({ status: false, Error: err.message });
+  }
+};
 module.exports = { createColleges, getInternsFromColleges };
