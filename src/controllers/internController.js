@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const internModel = require('../models/internModel')
+const collegeModel = require('../models/collegeModel')
 
 const createInterns = async function (req, res) {
     try {
@@ -9,7 +10,7 @@ const createInterns = async function (req, res) {
         const mobileRegex = /^\d{10}$/
 
         let data = req.body
-        let { name, email, mobile, collegeId } = data
+        let { name, email, mobile, collegeName } = data
 
         if (Object.keys(data).length == 0) {
             return res.status(400).send({ status: false, message: "please enter data" })
@@ -40,13 +41,21 @@ const createInterns = async function (req, res) {
         if (mobileAlreadyExist) {
             return res.status(400).send({ status: false, message: "Mobile Number is already exist" })
         }
-        if (!collegeId) {
-            return res.status(400).send({ status: false, message: "CollegeId is mandatory" })
-        }
-        if (!mongoose.Types.ObjectId.isValid(collegeId)) {
-            return res.status(400).send({ status: false, message: "CollegeId is invalid" })
-        }
+        // if (!collegeId) {
+        //     return res.status(400).send({ status: false, message: "CollegeId is mandatory" })
+        // }
+        // if (!mongoose.Types.ObjectId.isValid(collegeId)) {
+        //     return res.status(400).send({ status: false, message: "CollegeId is invalid" })
+        // }
 
+        data.collegeName = " "
+
+        let clgName = await collegeModel.findOne({ name: collegeName })
+        if (!clgName) {
+            return res.status(400).send({ status: false, message: "collegeName does not exist" })
+        
+    }
+        
         let internData = await internModel.create(data)
         return res.status(201).send({ status: true, msg: 'intern data created successfully', data: internData })
 
