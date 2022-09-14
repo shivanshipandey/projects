@@ -19,8 +19,9 @@ const createInterns = async function (req, res) {
             return res.status(400).send({ status: false, message: "name is mandatory" })
         }
         if (!name.match(nameRegex)) {
-            return res.status(400).send({ status: false, message: "name is invalid" })
+            return res.status(400).send({ status: false, message: "plz write name in lowerCase only" })
         }
+       
         if (!email) {
             return res.status(400).send({ status: false, message: "Email is mandatory" })
         }
@@ -42,7 +43,11 @@ const createInterns = async function (req, res) {
             return res.status(400).send({ status: false, message: "Mobile Number is already exist" })
         }
 
-        data['collegeName'] = null
+       
+
+        if(!collegeName){
+            return res.status(400).send({status: false, message: 'college name is mandatory'})
+        }
 
         let clgName = await collegeModel.findOne({ name: collegeName.toString()})
         if (!clgName) {
@@ -50,13 +55,14 @@ const createInterns = async function (req, res) {
     }
     
     if(collegeName){
-        data['collegeId'] = clgName._id
+        data.collegeId = clgName._id
     }
 
         let internData = await internModel.create(data)
 
         return res.status(201).send({ status: true, message: 'intern data created successfully', data: internData })
 
+        
     } catch (error) {
         return res.status(500).send({ status: false, Error: error.message })
     }
