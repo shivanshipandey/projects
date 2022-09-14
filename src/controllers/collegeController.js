@@ -25,11 +25,8 @@ const createColleges = async function (req, res) {
     if (!logoLink) {
       return res.status(400).send({ status: false, message: "logoLink is required" });
     }
-   
-    let collegeData = await collegeModel.create(data);
-    return res.status(201).send({status: true,message: "college data created successfully",data: collegeData,
-    });
 
+    
     //Body should not exceed the length by 4
 
     if(dataBody.length>4){
@@ -41,6 +38,11 @@ const createColleges = async function (req, res) {
     if(name.includes(" ")){
         res.status(400).send({status : false, msg : "Space is not allowed"})
     }
+   
+    let collegeData = await collegeModel.create(data);
+    return res.status(201).send({status: true,message: "college data created successfully",data: collegeData,
+    });
+
 
   } catch (error) {
     return res.status(500).send({ status: false, Error: error.message });
@@ -49,7 +51,7 @@ const createColleges = async function (req, res) {
 
 const getInternsFromColleges = async function (req, res) {
   try {
-    let collegeName = req.query.name;
+    let collegeName = req.query.collegeName;
     if (!collegeName){
         return res.status(400).send({status:false, message:"Query is required."})
     }
@@ -72,7 +74,7 @@ const getInternsFromColleges = async function (req, res) {
         name : name,
         fullName : fullName,
         logoLink : logoLink,
-        interns :[ intern.length? intern : { message: "0 application from this college."}]
+        interns : intern.length? intern : { message: "0 application from this college."}
     }
     return res.status(200).send({status:true, data:data})
 
