@@ -51,7 +51,7 @@ const createInterns = async function (req, res) {
         else{
             data['collegeId'] = clgName._id
         }
-
+        
         let internData = await internModel.create(data)
 
         return res.status(201).send({ status: true, message: 'intern data created successfully', data: internData })
