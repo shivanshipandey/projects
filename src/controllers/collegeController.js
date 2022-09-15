@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const collegeModel = require("../models/collegeModel");
 const internModel = require("../models/internModel");
 
@@ -6,12 +5,11 @@ const createColleges = async function (req, res) {
     try {
         const logoRegex = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/
 
-
         let data = req.body;
         let { name, fullName, logoLink } = data;
 
         let dataBody = Object.keys(data)
-        if (Object.keys(data).length == 0) {
+        if (dataBody.length == 0) {
             return res.status(400).send({ status: false, message: "please enter Data" });
         }
         if (!name) {

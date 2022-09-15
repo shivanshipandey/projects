@@ -18,6 +18,6 @@ const collegeSchema = new mongoose.Schema({
         type : Boolean,
         default : false
     }
-}, {timestamps : true})
+}, {timestamps : false})
  
 module.exports = mongoose.model('College', collegeSchema)
