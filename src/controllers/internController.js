@@ -44,17 +44,17 @@ const createInterns = async function (req, res) {
             return res.status(400).send({ status: false, message: 'college name is mandatory' })
         }
 
-        let clgName = await collegeModel.findOne({ name: collegeName.toString() })
+        let clgName = await collegeModel.findOne({ name: collegeName })
         if (!clgName) {
             return res.status(400).send({ status: false, message: "collegeName does not exist" })
         }
-        else{
+        else {
             data['collegeId'] = clgName._id
         }
-        
-        let internData = await internModel.create(data)
+        let intern = await internModel.create(data)
+        let internData = {isDeleted: intern.isDeleted, name: intern.name, email: intern.email, mobile: intern.mobile, collegeId: intern.collegeId }
 
-        return res.status(201).send({ status: true, message: 'intern data created successfully', data: internData })
+        return res.status(201).send({ status: true, data: internData })
 
     } catch (error) {
         return res.status(500).send({ status: false, Error: error.message })

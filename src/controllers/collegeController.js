@@ -39,10 +39,9 @@ const createColleges = async function (req, res) {
             return res.status(400).send({ status: false, msg: "Space is not allowed" })
         }
 
-        let collegeData = await collegeModel.create(data);
-        return res.status(201).send({
-            status: true, message: "college data created successfully", data: collegeData,
-        });
+        let college = await collegeModel.create(data);
+        let collegeData = {name: college.name, fullName: college.fullName, logoLink: college.logoLink, isDeleted: college.isDeleted}
+        return res.status(201).send({ status: true, data: collegeData });
 
     } catch (error) {
         return res.status(500).send({ status: false, Error: error.message });
@@ -59,13 +58,13 @@ const getInternsFromColleges = async function (req, res) {
             return res.status(400).send({ status: false, message: "enter single query." })
         }
 
-        const isValidName = (value) => {
+        const isLowerCase = (value) => {
             if (!(value === value.toLowerCase())) {
                 return false
             }
             return true
         }
-        if (!isValidName(collegeName)) {
+        if (!isLowerCase(collegeName)) {
             return res.status(400).send({ status: false, message: 'please use the lowercase in query' })
         }
 
