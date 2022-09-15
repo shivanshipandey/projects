@@ -30,13 +30,13 @@ const createColleges = async function (req, res) {
         if (!logoLink.match(logoRegex)) {
             return res.status(400).send({ status: false, msg: 'invalid format of logoLink' })
         }
-       
-        if(dataBody.length > 4){
-           return res.status(400).send({status: false, mssg : "Only name, fullName, logoLink, and idDeleted are allowed in the request body"})
+
+        if (dataBody.length > 4) {
+            return res.status(400).send({ status: false, mssg: "Only name, fullName, logoLink, and idDeleted are allowed in the request body" })
         }
 
-        if(name.includes(" ")){
-           return res.status(400).send({status : false, msg : "Space is not allowed"})
+        if (name.includes(" ")) {
+            return res.status(400).send({ status: false, msg: "Space is not allowed" })
         }
 
         let collegeData = await collegeModel.create(data);
@@ -59,14 +59,14 @@ const getInternsFromColleges = async function (req, res) {
             return res.status(400).send({ status: false, message: "enter single query." })
         }
 
-        const isLowerCase = (value)=> {
-            if(!(value === value.toLowerCase())){
+        const isValidName = (value) => {
+            if (!(value === value.toLowerCase())) {
                 return false
             }
             return true
         }
-        if(!isLowerCase(collegeName)){
-            return res.status(400).send({status: false, message: 'please use the lowercase in query'})
+        if (!isValidName(collegeName)) {
+            return res.status(400).send({ status: false, message: 'please use the lowercase in query' })
         }
 
         let isValid = await collegeModel.findOne({ name: collegeName });
