@@ -59,13 +59,13 @@ const getInternsFromColleges = async function (req, res) {
             return res.status(400).send({ status: false, message: "enter single query." })
         }
 
-        const isValidName = (value)=> {
+        const isLowerCase = (value)=> {
             if(!(value === value.toLowerCase())){
                 return false
             }
             return true
         }
-        if(!isValidName(collegeName)){
+        if(!isLowerCase(collegeName)){
             return res.status(400).send({status: false, message: 'please use the lowercase in query'})
         }
 
