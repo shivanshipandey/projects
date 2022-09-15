@@ -48,7 +48,7 @@ const createInterns = async function (req, res) {
         if (!clgName) {
             return res.status(400).send({ status: false, message: "collegeName does not exist" })
         }
-        else {
+        else{
             data['collegeId'] = clgName._id
         }
 
