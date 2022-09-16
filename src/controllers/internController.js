@@ -6,7 +6,7 @@ const createInterns = async function (req, res) {
 
         const emailRegex = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/
         const nameRegex = /^[a-z\s]+$/i
-        const mobileRegex = /^\d{10}$/
+        const mobileRegex = /^[6-9][0-9]+$/
 
         let data = req.body
         let { name, email, mobile, collegeName } = data
@@ -36,6 +36,9 @@ const createInterns = async function (req, res) {
         if (!mobile.match(mobileRegex)) {
             return res.status(400).send({ status: false, message: "Mobile Number is invalid" })
         }
+        if( mobile.length < 10 || mobile.length > 10){
+            return res.status(400).send({ status: false, message: "Mobile Number should be ten digit" })
+        }
         let mobileAlreadyExist = await internModel.findOne({ mobile: mobile })
         if (mobileAlreadyExist) {
             return res.status(400).send({ status: false, message: "Mobile Number is already exist" })
@@ -43,7 +46,6 @@ const createInterns = async function (req, res) {
         if (!collegeName) {
             return res.status(400).send({ status: false, message: 'college name is mandatory' })
         }
-
         let clgName = await collegeModel.findOne({ name: collegeName })
         if (!clgName) {
             return res.status(400).send({ status: false, message: "collegeName does not exist" })
@@ -51,6 +53,7 @@ const createInterns = async function (req, res) {
         else {
             data['collegeId'] = clgName._id
         }
+
         let intern = await internModel.create(data)
         let internData = {isDeleted: intern.isDeleted, name: intern.name, email: intern.email, mobile: intern.mobile, collegeId: intern.collegeId }
 
@@ -61,4 +64,4 @@ const createInterns = async function (req, res) {
     }
 }
 
-module.exports = { createInterns }
+module.exports = {  createInterns }

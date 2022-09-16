@@ -4,8 +4,7 @@ const mongoose = require('mongoose')
 const app = express()
 
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.json());
 
 mongoose.connect(
     'mongodb+srv://agDuke:aakash1234@cluster0.oyazcaq.mongodb.net/group-34-Database?retryWrites=true&w=majority'

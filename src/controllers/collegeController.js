@@ -1,21 +1,25 @@
-const mongoose = require("mongoose");
 const collegeModel = require("../models/collegeModel");
 const internModel = require("../models/internModel");
+const validator = require("validator")
 
 const createColleges = async function (req, res) {
     try {
-        const logoRegex = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/
-
-
+        
         let data = req.body;
         let { name, fullName, logoLink } = data;
 
         let dataBody = Object.keys(data)
-        if (Object.keys(data).length == 0) {
+        if (dataBody.length == 0) {
             return res.status(400).send({ status: false, message: "please enter Data" });
+        }
+        if (dataBody.length > 4) {
+            return res.status(400).send({ status: false, mssg: "Only name, fullName, logoLink, and idDeleted are allowed in the request body" })
         }
         if (!name) {
             return res.status(400).send({ status: false, message: "name is required" });
+        }
+        if (name.includes(" ")) {
+            return res.status(400).send({ status: false, msg: "Space is not allowed" })
         }
         let nameAlreadyExist = await collegeModel.findOne({ name: name });
         if (nameAlreadyExist) {
@@ -27,19 +31,11 @@ const createColleges = async function (req, res) {
         if (!logoLink) {
             return res.status(400).send({ status: false, message: "logoLink is required" });
         }
-        if (!logoLink.match(logoRegex)) {
-            return res.status(400).send({ status: false, msg: 'invalid format of logoLink' })
+        if(!validator.isURL(logoLink)){
+            return res.status(400).send({ status : false, message : "LogoLink is inValid"})
         }
 
-        if (dataBody.length > 4) {
-            return res.status(400).send({ status: false, mssg: "Only name, fullName, logoLink, and idDeleted are allowed in the request body" })
-        }
-
-        if (name.includes(" ")) {
-            return res.status(400).send({ status: false, msg: "Space is not allowed" })
-        }
-
-        let college = await collegeModel.create(data);
+        let college = await collegeModel.create(data)
         let collegeData = {name: college.name, fullName: college.fullName, logoLink: college.logoLink, isDeleted: college.isDeleted}
         return res.status(201).send({ status: true, data: collegeData });
 
@@ -76,9 +72,8 @@ const getInternsFromColleges = async function (req, res) {
                     "No Colleges with this given query. please give a valid college Name",
             });
         }
-        const clg = await collegeModel.findOne({ name: collegeName })
-        const { name, fullName, logoLink } = clg
-        const intern = await internModel.find({ collegeId: clg._id }).select({ name: 1, email: 1, mobile: 1 })
+        const { name, fullName, logoLink } = isValid
+        const intern = await internModel.find({ collegeId: isValid._id }).select({ name: 1, email: 1, mobile: 1 })
 
         const data = {
             name: name,
