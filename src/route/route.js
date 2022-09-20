@@ -1,4 +1,11 @@
 const mongoose= require('mongoose')
 const router = express.Router()
 
-module.exports = router
+
+
+const userController = require("../controllers/userController")
+
+router.post("/register", userController.creatuser)
+
+
+module.exports = router;
