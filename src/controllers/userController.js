@@ -123,7 +123,7 @@ const loginUser = async function(req,res){
             return res.status(400).send({status:false, msg:"please enter vaild email"})
         }
 
-        const user = await userModel.findOne({email:email})
+        const user = await userModel.findOne({email})
         if(!user){
             return res.status(404).send({status: false, msg:"user not found"})
         }
@@ -144,12 +144,15 @@ const loginUser = async function(req,res){
             {
                 
                     userId: user["_id"].toString(),
-                    iat: Math.floor(Date.now() / 1000),///to get time in second
-                    exp: Math.floor(Date.now() / 1000) + (60 * 60)///expire in 1hour
-                  
+                    iat: (new Date().getTime()), 
+                    exp : 60* 60,
+                    
             },
+            
+            
             "project-3//bookmanagemnt-35"
         );
+        console.log(token)
         return res.status(200).send({status: true , msg:"Success", data:{ token}})
     }catch(err){
         return res.status(500).send({status: false, msg: err.message})
