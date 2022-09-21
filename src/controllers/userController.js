@@ -8,9 +8,9 @@ const createUser = async function (req, res){
         let data = req.body
         let {title, name, phone, email, password, address} = data
 
-        const nameRegex = /^[a-z\s]+$/i
+        const nameRegex = /^[a-zA-Z , ]*$/
         const phoneRegex = /^[6-9][0-9]+$/ 
-
+        //const passRegex = /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,}$
 
         let dataBody = Object.keys(data)
         if(dataBody.length == 0){
@@ -25,7 +25,7 @@ const createUser = async function (req, res){
             return res.status(400).send({ status : false, mssg : "title is mandatory"})
         }
          
-        if(!(title == "Mr", "Mrs", "Miss" )){
+        if(!(title == "Mr" || title == "Mrs" || title == "Miss" )){
             return res.status(400).send({ status : false, mssg : "Tittle can not be other then Mr, Mrs, Miss"})
         }
 
@@ -42,7 +42,7 @@ const createUser = async function (req, res){
         }
 
         if(!phone.match(phoneRegex)){
-            return res.status(400).send({ status : false, mssg : "Phone NUmber is invalid"})
+            return res.status(400).send({ status : false, mssg : "Phone Number is invalid"})
         }
 
         if(phone.length < 10 || phone.length > 10){
@@ -97,6 +97,7 @@ const createUser = async function (req, res){
 
 
 //====================================================LOGIN USER===================================================================
+
 
 const isValid= function(value){
     if( typeof value=="undefined"|| value==null )return false;

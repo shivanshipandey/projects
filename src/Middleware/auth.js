@@ -14,7 +14,11 @@ const authentication =async function(req,res,next){
                 return res.status(403).send({status:false, message:"Invalid User"})
             }
             return decode;
+
         })
+        if(Date.now()>(decodeToken.exp)*1000){
+            return res.status(440).send({status:false, message:"Session expired!please login again"})
+        }
         req.token= decodeToken;
         next();
     }catch(err){

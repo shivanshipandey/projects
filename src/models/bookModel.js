@@ -14,6 +14,7 @@ const bookSchema = new mongoose.Schema(
     userId: {
       type: ObjectId,
       ref: "user",
+      required : true
     },
     ISBN: {
       type: String,
@@ -24,19 +25,14 @@ const bookSchema = new mongoose.Schema(
       type: String,
       unique: true,
     },
-    subcategory: [
-      {
+    subcategory: {
         type: String,
         required: true,
       },
-    ],
+   
     reviews: {
       type: Number,
       default: 0,
-      comment: {
-        type: ObjectId,
-        ref: "Review",
-      },
     },
 
     deletedAt: {
@@ -47,7 +43,7 @@ const bookSchema = new mongoose.Schema(
       default: false,
     },
     releasedAt: {
-      type: Date,
+      type: String,
       required: true,
     },
   },

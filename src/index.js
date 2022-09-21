@@ -18,4 +18,3 @@ app.listen(process.env.PORT || 3000, function(){
     console.log("Express app is running on PORT" + (process.env.PORT || 3000) )
 })
 
-// 'mongodb+srv://Group-35:TXYaPnnpYDZooRvO@cluster1.mpw9wwe.mongodb.net/test'
