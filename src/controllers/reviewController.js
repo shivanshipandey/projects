@@ -117,4 +117,56 @@ const updateReview = async function (req, res) {
     }
 }
 
-module.exports = { createReview , updateReview, }
+//===============================================DELETE REVIEW===============================
+
+const reviewDeleted =async function(req,res){
+    try {
+        let bookId=req.params.bookId
+        let reviewId=req.params.reviewId
+       
+         if (!bookId) {
+            return res
+              .status(400)
+              .send({ status: false, message: "please enter bookId" });
+         }
+         let findBookId = await bookModel.findOne({_id: bookId,isDeleted: false,});
+              if (!findBookId) {
+                return res
+                  .status(400)
+                  .send({ status: false, message: "Book does not exists" });
+              }
+        if (!reviewId) {
+            return res
+              .status(400)
+              .send({ status: false, message: "please enter reviewId" });
+        }
+        let findReviewId = await reviewModel.findOne({
+          _id: reviewId,
+          isDeleted: false,
+        })
+    
+    
+        if (!findReviewId) {
+          return res
+            .status(400)
+            .send({ status: false, message: "review does not exists" });
+        }
+         
+        if (findReviewId.bookId !=bookId) {
+            return res.status(400).send({status:false,message:"review doesnot exists this book"})
+        }
+       
+        const deleteReview=await reviewModel.findOneAndUpdate({_id:reviewId,isDeleted:false},{$set:{isDeleted:true}},{new:true})
+        if (!deleteReview) {
+            return res.status(404).send({status:false,message:"review is allredy deleted"})
+        }   
+    
+        let reviewCount=await reviewModel.find({_id:bookId,isDeleted:false}).count()
+    
+        const bookReviewcount= await bookModel.findOneAndUpdate({_id:bookId,isDeleted:false},{$set:{reviews:reviewCount}},{new:true})
+      return res.status(200).send({status:true,message:"review deleted successfully"})                      
+    } catch (err) {
+        res.status(500).send({error:err.message})
+    }
+    }
+module.exports = { createReview , updateReview, reviewDeleted }

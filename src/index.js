@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const app = express()
 
 app.use(bodyParser.json())
-app.use(express.urlencoded({extended : true}))
+
 mongoose.connect('mongodb+srv://payal-chaudhary:BDoIPGJ3FjU4qpys@cluster0.jjm7nst.mongodb.net/Group35-Database',
 {useNewUrlParser : true})
 

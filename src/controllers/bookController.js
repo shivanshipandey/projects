@@ -9,7 +9,6 @@ let isValid = mongoose.Types.ObjectId.isValid
 const createBook = async function(req, res){
     try{
 
-    let dateRegex = "^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$"
 
     let data = req.body
     let {title, excerpt, userId, ISBN, category, subcategory, reviews, isDeleted, releasedAt} = data
@@ -83,7 +82,11 @@ const createBook = async function(req, res){
     return res.status(400).send({ status : false, mssg : "releasedAt is mandatory"})
   }
 
-  
+  let isValidDate = Date(`${releasedAt}`, 'YYYY-MM-DD') ////if required check for empty validation too}
+if(isValidDate==false){
+    return res.status(400).send({ status: false, message: 'releseAt should be in YYYY-MM-DD format.' });
+
+}
 
     let bookData = await bookModel.create(data)
      return res.status(201).send({status : true, mssg : "success", data : bookData})
@@ -107,7 +110,7 @@ const getBookByQuery= async function(req,res){
         if(size<1){
             return res.status(400).send({status:false, message:"Query param not given"})
         }
-        const getBook= await bookModel.find({isDeleted:false,data}).select({_id:1, title:1, excerpt:1, 
+        const getBook= await bookModel.find({ $and: [data, { isDeleted: false }] }).select({_id:1, title:1, excerpt:1, 
             userId:1, category:1,  releasedAt:1, reviews:1}).sort({title:1})
         
     if(getBook.length==0){

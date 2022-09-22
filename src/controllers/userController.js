@@ -137,22 +137,21 @@ const loginUser = async function(req,res){
         }
 
         if(user.password != password){
-            return res.status(403).send({status:false, msg:"please provide vaild password"})
+            return res.status(400).send({status:false, msg:"please provide vaild password"})
         }
         
         const token = jwt.sign(
             {
                 
                     userId: user["_id"].toString(),
-                    iat: (new Date().getTime()), 
-                    exp : 60* 60,
+                    iat: Math.floor(Date.now() / 1000),///to get time in second
+                    exp: Math.floor(Date.now() / 1000) + (60 * 60)///expire in 1hour
                     
             },
             
-            
-            "project-3//bookmanagemnt-35"
+             "project-3//bookmanagemnt-35"
         );
-        console.log(token)
+    
         return res.status(200).send({status: true , msg:"Success", data:{ token}})
     }catch(err){
         return res.status(500).send({status: false, msg: err.message})
