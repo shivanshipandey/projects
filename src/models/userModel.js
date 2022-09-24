@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema(
-  {
+
+const userSchema = new mongoose.Schema({
     title: {
       type: String,
       required: true,
@@ -32,8 +32,8 @@ const userSchema = new mongoose.Schema(
       city: { type: String },
       pincode: { type: String },
     },
-  },
-  { timestamps: true }
-);
+  },{ timestamps: true });
 
+
+  
 module.exports = mongoose.model("User", userSchema);

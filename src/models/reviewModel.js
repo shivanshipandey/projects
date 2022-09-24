@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Schema.Types.ObjectId;
-const reviewSchema = new mongoose.Schema(
-  {
+
+
+const reviewSchema = new mongoose.Schema({
     bookId: {
       type: ObjectId,
       ref: "Book",
@@ -31,8 +32,7 @@ const reviewSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-  },
-  { timestamps: true }
-);
+  },{ timestamps: true });
 
+  
 module.exports = mongoose.model("Review", reviewSchema);
