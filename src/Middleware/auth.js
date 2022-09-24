@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken")
 const reviewModel =require("../models/reviewModel")
 const bookModel= require("../models/bookModel")
 const { isValidObjectId } = require("mongoose")
-
+const mongoose = require('mongoose')
 ////authentication////
 const authentication =async function(req,res,next){
     try{
@@ -37,6 +37,11 @@ const authorisation = async function(req,res,next){
     if(!getBookByParam){
         return res.status(400).send({status:false, message: "Please provide BookId"}
         )
+    }
+
+    let isValid = mongoose.Types.ObjectId.isValid
+    if(!isValid(getBookByParam)){
+        return res.status(400).send({ status : false, mssg : "BookId is invalid"})
     }
     let getBookDetail = await bookModel.findById(getBookByParam)////or to use find and select
     if(!getBookDetail){

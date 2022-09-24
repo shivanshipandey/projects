@@ -12,10 +12,10 @@ router.post('/books', middleware.authentication, middleware.authorisation2, book
 router.post("/books/:bookId/review", reviewController.createReview)
 router.get("/books",middleware.authentication, bookController.getBookByQuery)
 router.get('/books/:bookId',middleware.authentication, bookController.getBookByParam)
-router.put("/books/:bookId", middleware.authentication, middleware.authorisation,middleware.authorisation2, bookController.updateBooks)
+router.put("/books/:bookId", middleware.authentication, middleware.authorisation, bookController.updateBooks)
 router.delete('/books/:bookId', middleware.authentication, middleware.authorisation, bookController.deletedByParams)
-router.put("/books/:bookId/review/:reviewId",middleware.authentication, reviewController.updateReview)
-router.delete("/books/:bookId/review/:reviewId",middleware.authentication, reviewController.reviewDeleted)
+router.put("/books/:bookId/review/:reviewId", reviewController.updateReview)
+router.delete("/books/:bookId/review/:reviewId", reviewController.reviewDeleted)
 
 router.all("/*", function (req, res) {
     res.status(400).send({status: false, mssg: "Make Sure Your Endpoint is Correct !!!"
