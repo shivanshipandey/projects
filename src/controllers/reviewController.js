@@ -193,6 +193,42 @@ const reviewDeleted =async function(req,res){
         }
     }
 
-    
+    /////////////////////second approch////////////
+    const deleteBookReview = async function (req, res) {
+        let bookId = req.params.bookId;
+        let reviewId = req.params.reviewId;
+      
+        if (!mongoose.isValidObjectId(bookId))
+          return res.status(400).send({ status: false, message: "Invalid book id." })
+      
+        if (!mongoose.isValidObjectId(reviewId))
+          return res.status(400).send({ status: false, message: "Invalid review id." })
+      
+        let checkBook = await bookModel.findOne({ _id: bookId });
+        if (!checkBook) {
+          return res.status(404).send({ status: true, message: 'The book does not exists with the given bookId.' });
+        }
+        let checkReview = await reviewModel.findOne({ _id: reviewId });
+        if (!checkReview) {
+          return res.status(404).send({ status: false, message: 'The review does not exist with the given reviewId.' });
+        }
+        if (checkBook.isDeleted == true || checkReview.isDeleted == true) {
+          return res.status(404).send({ status: false, message: "can not delete review of deleted Book " })
+        }
+      
+      
+        let deletedReviewData = await reviewModel.findOneAndUpdate({ _id: reviewId }, {
+          $set: { isDeleted: true }
+        }, { new: true, upsert: true })
+        let countReviews = await reviewModel.find({ bookId: bookId, isDeleted: false }).count();
+        let updatedBookData = await bookModel.findOneAndUpdate({ _id: bookId }, { $set: { reviews: countReviews } }, { new: true, upsert: true });
+      
+        return res.status(200).send({
+          status: true, message: 'Success', Data: {
+            UpdatedBookData: updatedBookData,
+            deletedReviewData: deletedReviewData
+          }
+        })
+      }
 
 module.exports = { createReview , updateReview, reviewDeleted }
