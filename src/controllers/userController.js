@@ -1,5 +1,4 @@
 const userModel = require("../models/userModel");
-const mongoose = require("mongoose")
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
 
@@ -39,7 +38,7 @@ const createUser = async function (req, res) {
       return res.status(400).send({ status: false, message: "Name is mandatory" });
     }
 
-    if (!name.match(nameRegex)) {
+    if (!nameRegex.test(name)) {
       return res.status(400).send({ status: false, message: "Plz do not enter any special character in name", });
     }
 
@@ -47,7 +46,7 @@ const createUser = async function (req, res) {
       return res.status(400).send({ status: false, message: "Phone number is mandatory" });
     }
 
-    if(!phone.match(phoneRegex)){
+    if(!phoneRegex.test(phone)){
       return res.status(400).send({ status : false, message : "Phone number is not valid"})
     }
 

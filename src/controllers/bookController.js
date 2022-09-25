@@ -1,17 +1,25 @@
 const mongoose = require('mongoose')
 const bookModel = require('../models/bookModel')
 const reviewModel = require("../models/reviewModel")
+const validator = require('validator')
 
 
 let isValid = mongoose.Types.ObjectId.isValid
 
+
+
 //=====================================================CREATE BOOK ===============================================================================================//
+
+
 
 const createBook = async function (req, res) {
     try {
 
         let data = req.body
         let { title, excerpt, userId, ISBN, category, subcategory, reviews, isDeleted, releasedAt } = data
+
+        let releasedDate = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;// YYYY-MM-DD
+
 
         let dataBody = Object.keys(data)
         if (dataBody.length == 0) {
@@ -77,13 +85,12 @@ const createBook = async function (req, res) {
             }
         }
 
-        if (!releasedAt) {
-            return res.status(400).send({ status: false, message: "releasedAt is mandatory" })
-        }
+        if (!releasedAt){
+             return res.status(400).send({ status: false, msg: "Please Provide releasedAt" })
+            }
 
-        let isValidDate = Date(`${releasedAt}`, 'YYYY-MM-DD') ////if required check for empty validation too}
-        if (isValidDate == false) {
-            return res.status(400).send({ status: false, message: 'releseAt should be in YYYY-MM-DD format.' });
+        if (!releasedDate.test(releasedAt)) {
+            return res.status(400).send({ status: false, message: "Released Date Format Should be in 'YYYY-MM-DD' Format " });
         }
 
         let bookData = await bookModel.create(data)
@@ -96,7 +103,7 @@ const createBook = async function (req, res) {
 
 
 
-//=======================================   GET BOOKS BY QUERY PARAMS   ============================================================================
+//=======================================   GET BOOKS BY QUERY PARAMS   ================================================================================================================================================================
 
 
 
@@ -104,11 +111,6 @@ const getBookByQuery = async function (req, res) {
     try {
 
         let data = req.query
-
-        let size = Object.entries(data).length
-        if (size < 1) {
-            return res.status(400).send({ status: false, message: "Query param not given" })
-        }
 
         const getBook = await bookModel.find({ $and: [data, { isDeleted: false }] }).select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1}).sort({ title: 1 })
 
