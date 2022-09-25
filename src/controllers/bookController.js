@@ -115,7 +115,7 @@ const getBookByQuery = async function (req, res) {
         if (getBook.length == 0) {
             return res.status(404).send({ status: false, message: "No Book found" })
         }
-        res.status(200).send({ status: true, message: "BookList", data: getBook })///array or object
+        res.status(200).send({ status: true, message: "BookList", data: getBook })
 
     }catch (err) {
         return res.status(500).send({ status: false, message: err.message })
@@ -191,7 +191,7 @@ const updateBooks = async function (req, res) {
         }
 
         let data = req.body
-        let { title, excerpt, releasedAt, ISBN, category, subcategory, userId} = data
+        let { title, excerpt, releasedAt, ISBN} = data
 
         let dataBody = Object.keys(data)
         if (dataBody.length == 0) {
@@ -208,9 +208,6 @@ const updateBooks = async function (req, res) {
             return res.status(400).send({ status: false, message: "This ISBN already exists" })
         }
 
-        if(category || subcategory || userId){
-            return res.status(400).send({ status : false, message : "You can not update such data"})
-        }
 
         let updatedBook = await bookModel.findByIdAndUpdate({ _id: bookId, isDeleted: false }, { title, excerpt, releasedAt, ISBN }, { new: true })
         return res.status(200).send({ status: true, message: "Book Updated Successfully", data: updatedBook })

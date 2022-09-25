@@ -24,7 +24,7 @@ router.delete('/books/:bookId', middleware.authentication, middleware.authorisat
                          //REVIEW API//
 router.post("/books/:bookId/review", reviewController.createReview)
 router.put("/books/:bookId/review/:reviewId", reviewController.updateReview)
-router.delete("/books/:bookId/review/:reviewId", reviewController.reviewDeleted)
+router.delete("/books/:bookId/review/:reviewId", reviewController.deleteBookReview)
 
 
 
