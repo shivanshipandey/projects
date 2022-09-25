@@ -98,7 +98,7 @@ const updateReview = async function (req, res) {
         }
 
         let data = req.body 
-        let {review, rating, reviewedBy} = data
+        let rating =data.rating
         
         let dataBody = Object.keys(data)
         if(dataBody.length == 0){
