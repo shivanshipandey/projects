@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const bookModel = require('../models/bookModel')
 const reviewModel = require("../models/reviewModel")
-const validator = require('validator')
 
 
 let isValid = mongoose.Types.ObjectId.isValid
@@ -19,7 +18,7 @@ const createBook = async function (req, res) {
         let { title, excerpt, userId, ISBN, category, subcategory, reviews, isDeleted, releasedAt } = data
 
         let releasedDate = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;// YYYY-MM-DD
-
+        const ISBNRegex = /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/
 
         let dataBody = Object.keys(data)
         if (dataBody.length == 0) {
@@ -53,6 +52,10 @@ const createBook = async function (req, res) {
 
         if (ISBN.length < 13 || ISBN.length > 13) {
             return res.status(400).send({ status: false, message: "Length of ISBN number is incorrect" })
+        }
+
+        if( ! ISBNRegex.test(ISBN)){
+            return res.status(400).send({ status : false, message : "ISBN number is not desired format !"})
         }
 
         let isbnCheck = await bookModel.findOne({ ISBN })

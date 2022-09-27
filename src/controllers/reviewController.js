@@ -146,10 +146,10 @@ const updateReview = async function (req, res) {
         let bookId = req.params.bookId;
         let reviewId = req.params.reviewId;
       
-        if (!mongoose.isValidObjectId(bookId))
+        if (!isValid(bookId))
           return res.status(400).send({ status: false, message: "Invalid book id." })
       
-        if (!mongoose.isValidObjectId(reviewId))
+        if (!isValid(reviewId))
           return res.status(400).send({ status: false, message: "Invalid review id." })
       
         let checkBook = await bookModel.findOne({ _id: bookId });
@@ -174,9 +174,7 @@ const updateReview = async function (req, res) {
         let updatedBookData = await bookModel.findOneAndUpdate({ _id: bookId }, { $set: { reviews: countReviews } }, { new: true, upsert: true });
       
         return res.status(200).send({
-          status: true, message: 'Success', Data: {
-            UpdatedBookData: updatedBookData,
-            deletedReviewData: deletedReviewData
+          status: true, message: 'Success', Data: {UpdatedBookData: updatedBookData, deletedReviewData: deletedReviewData
 
           }
         })
