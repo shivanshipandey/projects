@@ -18,7 +18,7 @@ const urlShortener = async function (req, res){
         if(existUrl){return res.status(200).send({status:true,data:existUrl})
     }
         let baseUrl = "http://localhost:3000"
-        const urlCode = shortId.generate()
+        const urlCode = shortId.generate().toLowerCase()
     
         const shortUrl = baseUrl + '/' + urlCode
 
