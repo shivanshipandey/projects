@@ -1,0 +1,26 @@
+{
+  "name": "url-shortner-group-42",
+  "version": "1.0.0",
+  "description": "url-shortner",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shivanshipandey/Url-Shortner-Group-42.git"
+  },
+  "author": "Shivanshi Pandey, Jay Sharma, Anuj Tembhurne, Ram Salunkhe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shivanshipandey/Url-Shortner-Group-42/issues"
+  },
+  "homepage": "https://github.com/shivanshipandey/Url-Shortner-Group-42#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mongoose": "^6.6.2",
+    "nodemon": "^2.0.20",
+    "shortid": "^2.2.16",
+    "valid-url": "^1.0.9"
+  }
+}
