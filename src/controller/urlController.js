@@ -36,4 +36,17 @@ const urlShortener = async function (req, res){
     }
 }
 
-module.exports = {urlShortener}
+const getUrl = async function(req,res){
+    try {
+    let urlCode = req.params.urlCode
+    // console.log(typeof urlCode);
+    if(!urlCode)return  res.status(400).send({status:false,message:"please give urlcode in params"})
+    let urldata = await urlModel.findOne({urlCode})
+    if(!urldata)return res.status(404).send({status:false,message:`no url found with this ${urlCode}`})
+    return res.redirect(urldata.longUrl)
+} catch (error) {
+    return res.status(500).send({ status: false, message: error.message })
+}
+}
+
+module.exports = {urlShortener,getUrl}
