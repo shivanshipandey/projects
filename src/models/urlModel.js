@@ -5,7 +5,6 @@ const urlSchema = new mongoose.Schema({
         required : true,
         type : String, 
         unique : true,
-        lowercase : true,
         trim : true
     },
     longUrl : {
@@ -13,9 +12,15 @@ const urlSchema = new mongoose.Schema({
         type : String
     },
     shortUrl : {
+<<<<<<< HEAD
         // required : true, 
         // unique : true,
         type : String
+=======
+        required : true, 
+        unique : true,
+        type : String,
+>>>>>>> cda193304250fe1c9b63b8027d55027aeb9ac736
     }
 }, {timestamps : true})
 
