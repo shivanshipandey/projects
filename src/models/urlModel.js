@@ -8,19 +8,13 @@ const urlSchema = new mongoose.Schema({
         trim : true
     },
     longUrl : {
-        // required : true,
+        required : true,
         type : String
     },
     shortUrl : {
-<<<<<<< HEAD
-        // required : true, 
-        // unique : true,
-        type : String
-=======
         required : true, 
         unique : true,
         type : String,
->>>>>>> cda193304250fe1c9b63b8027d55027aeb9ac736
     }
 }, {timestamps : true})
 
