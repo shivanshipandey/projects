@@ -30,7 +30,7 @@ const GET_ASYNC = promisify(redisClient.GET).bind(redisClient);
 const urlShortener = async function (req, res) {
     try {
         let longUrl = req.body.longUrl
-        if (!Object.keys(req.body).length != 1) return res.status(400).send({ status: false, msg: "enter only one key longurl" })
+        if (Object.keys(req.body).length != 1) return res.status(400).send({ status: false, msg: "enter only one key longurl" })
         if (!longUrl) {
             return res.status(400).send({ status: false, message: "LongUrl is mandatory" })
         }
@@ -40,14 +40,14 @@ const urlShortener = async function (req, res) {
         }
 
         let getDetails = await GET_ASYNC(`${longUrl}`)
-        console.log(JSON.parse(getDetails))
+        // console.log(JSON.parse(getDetails))
         if (getDetails) {
-            return res.send({ msg: "data fetch from cache", data: JSON.parse(getDetails) })
+            return res.send({ message: "data fetch from cache", data: JSON.parse(getDetails) })
         }
 
         let existUrl = await urlModel.findOne({ longUrl }).select({ _id: 0, longUrl: 1, shortUrl: 1, urlCode: 1 })
         if (existUrl) {
-            return res.status(200).send({ msg: "data from db", status: true, data: existUrl })
+            return res.status(200).send({ message: "data from db", status: true, data: existUrl })
         }
         let baseUrl = "http://localhost:3000"
         const urlCode = shortId.generate().toLowerCase()
@@ -78,7 +78,7 @@ const getUrl = async function (req, res) {
         let getDetails = await GET_ASYNC(`${req.params.urlCode}`)
         //  console.log(getDetails)
         if (getDetails) {
-            console.log("done")
+            // console.log("done")
             return res.redirect(302, JSON.parse(getDetails).longUrl)
         }
 
