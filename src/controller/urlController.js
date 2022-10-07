@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const urlModel = require('../models/urlModel')
-const validUrl = require('valid-url')
 const shortId = require('shortid')
+const axios = require("axios");
 
 const redis = require("redis");
 
@@ -34,10 +34,17 @@ const urlShortener = async function (req, res) {
         if (!longUrl) {
             return res.status(400).send({ status: false, message: "LongUrl is mandatory" })
         }
-
-        if (!validUrl.isUri(longUrl)) {
-            return res.status(400).send({ status: false, message: "Url is not valid" })
+          // making promise
+          let obj={
+            method:"get",
+            url:longUrl
         }
+        let urlFound=false
+        let urlF = await axios(obj).then(()=>urlFound=true).catch(()=>{urlFound=false});
+        if(!urlF){
+            return res.status(400).send({status:false,message:"Please give valid longUrl"})
+        }
+        
 
         let getDetails = await GET_ASYNC(`${longUrl}`)
         // console.log(JSON.parse(getDetails))
@@ -49,6 +56,8 @@ const urlShortener = async function (req, res) {
         if (existUrl) {
             return res.status(200).send({ message: "data from db", status: true, data: existUrl })
         }
+      
+        
         let baseUrl = "http://localhost:3000"
         const urlCode = shortId.generate().toLowerCase()
 
