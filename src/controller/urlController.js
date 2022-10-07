@@ -34,16 +34,6 @@ const urlShortener = async function (req, res) {
         if (!longUrl) {
             return res.status(400).send({ status: false, message: "LongUrl is mandatory" })
         }
-          // making promise
-          let obj={
-            method:"get",
-            url:longUrl
-        }
-        let urlFound=false
-        let urlF = await axios(obj).then(()=>urlFound=true).catch(()=>{urlFound=false});
-        if(!urlF){
-            return res.status(400).send({status:false,message:"Please give valid longUrl"})
-        }
         
 
         let getDetails = await GET_ASYNC(`${longUrl}`)
@@ -54,7 +44,18 @@ const urlShortener = async function (req, res) {
 
         let existUrl = await urlModel.findOne({ longUrl }).select({ _id: 0, longUrl: 1, shortUrl: 1, urlCode: 1 })
         if (existUrl) {
+             await SET_ASYNC(`${longUrl}`, JSON.stringify(existUrl))
             return res.status(200).send({ message: "data from db", status: true, data: existUrl })
+        }
+         // making promise
+         let obj={
+            method:"get",
+            url:longUrl
+        }
+        let urlFound=false
+        let urlF = await axios(obj).then(()=>urlFound=true).catch(()=>{urlFound=false});
+        if(!urlF){
+            return res.status(404).send({status:false,message:"Url does not exist"})
         }
       
         
@@ -68,7 +69,7 @@ const urlShortener = async function (req, res) {
             shortUrl: shortUrl,
             urlCode: urlCode
         };
-        let Data = await SET_ASYNC(`${longUrl}`, JSON.stringify(all))
+       
         //console.log(Data)
         let urlData = await urlModel.create(all)
         return res.status(201).send({ status: true, data: urlData })
