@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const aws =require("aws-sdk")
 
 const createUser = async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin",'*')
     try {
         let userBody = JSON.parse(req.body.data)
         let files = req.files
