@@ -1,9 +1,11 @@
 const express =require('express');
 const mongoose=require('mongoose');
 const route = require('./routes/route');
+const multer=require("multer")
 const app=express();
 
 app.use(express.json());
+app.use(multer().any())
 
 let url="mongodb+srv://project5productsManagementGroup-42:myGnQEOp010y0N42@cluster0.rf4tgvq.mongodb.net/group-42";
 
