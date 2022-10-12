@@ -12,9 +12,8 @@ let url="mongodb+srv://project5productsManagementGroup-42:myGnQEOp010y0N42@clust
 let port=process.env.PORT||3000;
 
 mongoose.connect(url, {useNewUrlParser:true})
-.then(()=>"MongoDB is connected")
+.then(()=>console.log("MongoDB is connected"))
 .catch(err=>console.log(err))
-
 
 app.use('/', route);
 
