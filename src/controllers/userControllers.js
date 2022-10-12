@@ -17,7 +17,7 @@ const createUser = async function (req, res) {
       return res.status(400).send({ status: "false", message: "All fields are mandatory" });
     }
 
-    let { fname, lname, email, phone, password, address } = data;
+    let { fname, lname, email, phone, password, address, profileImage } = data;
     if (!isEmpty(fname)) {
       return res.status(400).send({status: "false", message: "fname must be present"});
     }
@@ -108,17 +108,14 @@ const createUser = async function (req, res) {
     if (checkPhone) {
       return res.status(400).send({status: "false", message: "Phone number is already in use"});
     }
-    // if (files && files.length > 0) { 
-    //   let uploadFileURL = await uploadFile(files[0]);
-    //   console.log(uploadFileURL);
-    //   data.profileImage = uploadFileURL;
-    //  } else {
-    //    return res.status(400).send({ status: false, msg: "No image found" });
-    //  }
+     
+    let profileImgUrl = await uploadFile(files[0]);
+        data.profileImage = profileImgUrl
+
     let savedUser = await userModel.create(data);
     return res.status(201).send({
       status: true,message: "user has been created successfully",data: savedUser});
-  } catch (err) {
+    } catch (err) {
     return res.status(500).send({ status: "false", msg: err.message });
   }
 };

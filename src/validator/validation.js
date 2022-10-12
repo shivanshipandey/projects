@@ -1,5 +1,12 @@
 const mongoose = require("mongoose");
 
+//validation 
+const isValid=function(value){
+  if (typeof value === "undefined" || value === null || value == " ")return false;
+  if (typeof value === "string" && value.trim().length > 0)return true;
+  return false
+};
+
 //Name Validation
 const isValidName = function (name) {
   const nameRegex = /^[a-zA-Z ]+$/;
@@ -55,7 +62,18 @@ const isValidStreet = function (street) {
   return streets.test(street);
 };
 
+//Price Validation
+const isValidPrice = function(price){
+  return /^[1-9]\d{0,7}(?:\.\d{1,2})?$/.test(price);
+}
+
+//Style Validation 
+const isValidStyle = function (value) {
+  return (/^[a-zA-Z _.-]+$/).test(value)        
+}
+
 module.exports = {
+  isValid,
   isEmpty,
   isValidName,
   isValidEmail,
@@ -65,4 +83,6 @@ module.exports = {
   isValidObjectId,
   isValidImage,
   isValidStreet,
+  isValidPrice,
+  isValidStyle,
 };
