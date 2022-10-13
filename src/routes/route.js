@@ -4,7 +4,8 @@ const userController=require("../controllers/userControllers")
 const productController = require("../controllers/productControllers")
 const middleWare = require("../middleware/auth");
 
-let {createProduct, productsById, updateProducts} = productController
+
+let {createProduct, productsById, updateProducts,deleteProduct} = productController
 let {createUser, userLogin, getUser, updateUsersProfile} = userController;
 let {authentication, authorization} = middleWare;
 
@@ -28,5 +29,8 @@ router.get("/products/:productId", productsById )
 
 // =========> Update Product <=============
 router.put("/products/:productId", updateProducts)
+
+//=========> deleteProduct<==================
+router.delete('/products/:productId', deleteProduct)
 
 module.exports=router

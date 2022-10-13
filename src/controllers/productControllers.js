@@ -232,7 +232,45 @@ const updateProducts = async function (req, res) {
     }
 }
 
-module.exports = { createProduct, productsById, updateProducts }
+const deleteProduct = async function(req, res) {
+    try {
+        const productId = req.params.productId;
+        const queryParams = req.query;
+        // no data is required from query params
+        if (Validator.isValidInputBody(queryParams)) {
+            return res.status(404).send({ status: false, message: "Page not found" });
+        }
+        // validating product id
+        if (!Validator.isValidObjectId(productId)) {
+            return res
+                .status(400)
+                .send({ status: false, message: "Invalid product id" });
+        }
+        // checking product available by given product ID 
+        const productById = await ProductModel.findOne({
+            _id: productId,
+            isDeleted: false,
+            deletedAt: null,
+        });
+
+        if (!productById) {
+            return res.status(404).send({
+                status: false,
+                message: "No product found by this product id",
+            });
+        }
+        // updating product isDeleted field
+        const markDirty = await ProductModel.findOneAndUpdate({ _id: productId }, { $set: { isDeleted: true, deletedAt: Date.now() } });
+
+        res
+            .status(200)
+            .send({ status: true, message: "Product successfully deleted" });
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+};
+
+module.exports = { createProduct, productsById, updateProducts,deleteProduct }
 
 
 
