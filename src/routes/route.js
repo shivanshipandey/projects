@@ -5,7 +5,7 @@ const productController = require("../controllers/productControllers")
 const middleWare = require("../middleware/auth");
 
 
-let {createProduct, productsById, updateProducts,deleteProduct} = productController
+let {createProduct, productsById, updateProducts, deleteProduct, getProductsByFilter} = productController
 let {createUser, userLogin, getUser, updateUsersProfile} = userController;
 let {authentication, authorization} = middleWare;
 
@@ -23,6 +23,9 @@ router.put("/user/:userId/profile", authentication, authorization, updateUsersPr
 
 // =========> Create Product Api <===========
 router.post("/products", createProduct);
+
+// =========> Get Products By filter <=========
+router.get("/products", getProductsByFilter);
 
 // =========> Get Products By Id <=============
 router.get("/products/:productId", productsById )

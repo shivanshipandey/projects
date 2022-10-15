@@ -221,6 +221,7 @@ const updateUsersProfile = async function (req, res) {
       if(!isEmpty(email)) {
         return res.status(400).send({status: false, msg: "Please Provide email address"});
       }
+
       if (!isValidEmail(email)) {
         return res
           .status(400).send({ status: false, message: "Provide a valid email id" });

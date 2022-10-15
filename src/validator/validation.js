@@ -2,10 +2,15 @@ const mongoose = require("mongoose");
 
 //validation 
 const isValid=function(value){
-  if (typeof value === "undefined" || value === null || value == " ")return false;
+  if (typeof value == "undefined" || value == null || value == " ")return false;
   if (typeof value === "string" && value.trim().length > 0)return true;
   return false
 };
+
+//Valid Sizes
+const validSize = function(size){
+  return ['S', 'XS', 'M', 'X', 'L', 'XXL', 'XL'].includes(size);
+}
 
 //Name Validation
 const isValidName = function (name) {
@@ -46,7 +51,13 @@ const isEmpty = function (value) {
   return true;
 };
 
-// ObjectId
+//validation for Input Body
+const isValidInputBody = function(object) {
+  return Object.keys(object).length > 0
+}
+
+
+// Vlidation for objectId
 const isValidObjectId = (objectId) => {
   return mongoose.Types.ObjectId.isValid(objectId);
 };
@@ -72,12 +83,19 @@ const isValidStyle = function (value) {
   return (/^[a-zA-Z _.-]+$/).test(value)        
 }
 
+//Price validation 
+const validPrice = function (price){
+  return(/^\d{0,8}(\.\d{1,4})?$/).test(price)
+}
+
 module.exports = {
   isValid,
+  validSize,
   isEmpty,
   isValidName,
   isValidEmail,
   isValidPhone,
+  isValidInputBody,
   isValidPassword,
   isValidpincode,
   isValidObjectId,
@@ -85,4 +103,5 @@ module.exports = {
   isValidStreet,
   isValidPrice,
   isValidStyle,
+  validPrice,
 };
