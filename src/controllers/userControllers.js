@@ -175,7 +175,7 @@ const getUser = async function (req, res) {
       return res.status(404).send({status: false, message: "No data found"});
     }
     return res.status(200).send({
-      status: true,message: "Users Profile Details",data: checkData});
+      status: true,message: "Users Profile Details",data: checkData}); 
   } catch (err) {
     return res.status(500).send({ status: false, msg: err.message });
   }
