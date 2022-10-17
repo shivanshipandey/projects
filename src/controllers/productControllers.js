@@ -224,7 +224,7 @@ const updateProducts = async function (req, res) {
         }
 
         const updateProduct = await productModel.findByIdAndUpdate({ _id: productId }, data, { new: true })
-        return res.status(200).send({ status: false, message: "Product Updated Successfully", data: updateProduct })
+        return res.status(200).send({ status: true, message: "Product Updated Successfully", data: updateProduct })
 
     } catch (error) {
         return res.status(500).send({ status: "false", message: error.message })
