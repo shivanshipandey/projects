@@ -67,16 +67,17 @@ const createProduct = async (req, res) => {
         let productImg = await aws.uploadFile(files[0]);
         data.productImage = productImg;
 
+        if(isFreeShipping){
         if (!isValid(isFreeShipping)) {
-            return res.status(400).sens({ status: false, message: "CurrencyId is not valid" })
+            return res.status(400).send({ status: false, message: "isFreeShipping is not valid" })
         }
 
         if (!(isFreeShipping == "true" || isFreeShipping == "false")) {
             return res.status(400).send({ status: false, message: "Please enter a boolean value for isFreeShipping" })
         }
-
+       }
         if (!isValid(style)) {
-            return res.status(400).sens({ status: false, message: "Style is not valid" })
+            return res.status(400).send({ status: false, message: "Style is not valid" })
         }
 
         if (!isValidStyle(style)) {
@@ -261,7 +262,7 @@ const updateProducts = async function (req, res) {
 
         if (data.style) {
             if (!isValid(data.style)) {
-                return res.status(400).sens({ status: false, message: "Style is not valid" })
+                return res.status(400).send({ status: false, message: "Style is not valid" })
             }
 
             if (!isValidStyle(data.style)) {
@@ -291,14 +292,11 @@ const updateProducts = async function (req, res) {
     }
 }
 
+
 const deleteProduct = async function(req, res) {
     try {
         const productId = req.params.productId;
-        const queryParams = req.query;
-        // no data is required from query params
-        if (!isValidInputBody(queryParams)) {
-            return res.status(404).send({ status: false, message: "Page not found" });
-        }
+       
         // validating product id
         if(!isValidObjectId(productId)){
             return res.status(400).send({ status: false, message: "Invalid product id" });

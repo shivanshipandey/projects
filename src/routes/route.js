@@ -8,7 +8,7 @@ const middleWare = require("../middleware/auth");
 
 let {createProduct, productsById, updateProducts, deleteProduct, getProductsByFilter} = productController
 let {createUser, userLogin, getUser, updateUsersProfile} = userController;
-let{ createCart} = cartController
+let {createCart,getCartData, updateCart, deleteCart} = cartController
 let {authentication, authorization} = middleWare;
 
 // ==========> Create User Api <============ 
@@ -41,4 +41,12 @@ router.delete('/products/:productId', deleteProduct)
 //=========> create Cart <=============
 router.post('/users/:userId/cart',  authentication, authorization, createCart)
 
+//=========> Get Cart <=============
+router.get('/users/:userId/cart', authentication, authorization, getCartData)
+
+//=========> Update Cart <============
+router.put('/users/:userId/cart', authentication, authorization, updateCart)
+
+//=========> Delete Cart <=============
+router.delete('/users/:userId/cart',  authentication, authorization, deleteCart )
 module.exports=router

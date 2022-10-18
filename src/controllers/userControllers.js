@@ -4,7 +4,7 @@ const validation = require("../validator/validation");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-let {isEmpty,isValidName,isValidPhone,isValidPassword,isValidpincode,isValidEmail,isValidObjectId,
+let {isEmpty,isValidName,isValidPhone,isValidpincode,isValidObjectId,
   isValidStreet} = validation;
 
 // ========> Create User Api <=================
@@ -42,15 +42,13 @@ const createUser = async function (req, res) {
     if (!isValidPhone(phone)) {
       return res.status(400).send({ status: "false", message: "Provide a valid phone number" });
     }
-    if (!isValidPassword(password)) {
-      return res.status(400).send({status: "false",message:"Password must contain atleast 8 characters including one upperCase, lowerCase, special characters and Numbers"});
-    }
+    if( password.length < 8 || password.length > 15){
+      return res.status(400).send({ status: false, message: "passwword no" })
+  }
     if (!isValidName(fname)) {
       return res.status(400).send({status: "false",message: "first name must be in alphabetical order"});
     }
-    if (!isValidEmail(email)) {
-      return res.status(400).send({status: "false",message: "provide a valid emailId"});
-    }
+  
 
     // ------- Address Validation  --------
     if (address) {
@@ -100,7 +98,7 @@ const createUser = async function (req, res) {
     const hash = await bcrypt.hash(password, saltRounds);
     data.password = hash;
 
-    let checkEmail = await userModel.findOne({ email: email });
+    let checkEmail = await userModel.findOne({ email});
     if (checkEmail) {
       return res.status(400).send({status: "false", message: "Email is already in use"});
     }
@@ -108,6 +106,11 @@ const createUser = async function (req, res) {
     if (checkPhone) {
       return res.status(400).send({status: "false", message: "Phone number is already in use"});
     }
+
+    // if(!profileImage){
+    //   return res.status(400).send({ status : false, message : "Profile Image is mandatory"})
+    // }
+
      
     let profileImgUrl = await uploadFile(files[0]);
         data.profileImage = profileImgUrl

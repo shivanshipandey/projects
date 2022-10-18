@@ -19,18 +19,12 @@ const isValidName = function (name) {
 };
 
 //Email Validation
-const isValidEmail = function (email) {
-  const emailRegex =
-    /^[a-z0-9][a-z0-9-_\.]+@([a-z]|[a-z0-9]?[a-z0-9-]+[a-z0-9])\.[a-z0-9]{2,10}(?:\.[a-z]{2,10})?$/;
-  return emailRegex.test(email);
-};
+// const isValidEmail = function (email) {
+//   const emailRegex =
+//     /^[a-z0-9][a-z0-9-_\.]+@([a-z]|[a-z0-9]?[a-z0-9-]+[a-z0-9])\.[a-z0-9]{2,10}(?:\.[a-z]{2,10})?$/;
+//   return emailRegex.test(email);
+// };
 
-// Password Validation
-const isValidPassword = function (password) {
-  const passwordRegex =
-    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$/;
-  return passwordRegex.test(password);
-};
 
 //Phone Validation
 const isValidPhone = function (phone) {
@@ -93,10 +87,9 @@ module.exports = {
   validSize,
   isEmpty,
   isValidName,
-  isValidEmail,
+  // isValidEmail,
   isValidPhone,
   isValidInputBody,
-  isValidPassword,
   isValidpincode,
   isValidObjectId,
   isValidImage,
