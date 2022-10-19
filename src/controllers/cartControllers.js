@@ -49,8 +49,8 @@ const createCart = async (req, res) => {
                 return res.status(404).send({ status: false, message: "Cart does not exists" });
         }
 
-        if (checkUser._id.toString() !== userLoggedIn)          // user authorization
-            return res.status(403).send({ status: false, message: "Unauthorized access" });
+        // if (checkUser._id.toString() !== userLoggedIn)          // user authorization
+        //     return res.status(403).send({ status: false, message: "Unauthorized access" });
 
         let checkProduct = await productModel.findOne({ _id: productId, isDeleted: false });
         if (!checkProduct)
@@ -80,7 +80,7 @@ const createCart = async (req, res) => {
                     ProdIdInCart[i].quantity = updatedQuantity;
                     checkCart.totalPrice = uptotal;
                     await checkCart.save();
-                    return res.status(200).send({ status: true, message: "Success", data: checkCart });
+                    return res.status(201).send({ status: true, message: "Success", data: checkCart });
                 }
             }
             //adds new product
@@ -90,7 +90,7 @@ const createCart = async (req, res) => {
             let count = checkCart.totalItems;
             checkCart.totalItems = count + 1;
             await checkCart.save();
-            return res.status(200).send({ status: true, message: "Success", data: checkCart });
+            return res.status(201).send({ status: true, message: "Success", data: checkCart });
         }
 
         let calprice = checkProduct.price * Number(quantity);           // 1st time cart
@@ -121,10 +121,10 @@ const getCartData=async function(req,res){
         // Authentication
         let tokenId=req.userId
         // console.log(tokenID)
-         if (tokenId !=userId)return res.status(401).send({status:false,message:"Unauthorise Access"})
+         //if (tokenId !=userId)return res.status(401).send({status:false,message:"Unauthorise Access"})
           let findCart=await cartModel.findOne({userId:userId})
         if(!findCart)return res.status(404).send({status:false,message:"cart is not found"})
-        return res.status(200).send({status:true,message:"Cart data fetched successfully",data:findCart})       
+        return res.status(200).send({status:true,message:"Success",data:findCart})       
     } catch (error) {
         return res.status(500).send({status:false,msg:error.message})
     }
