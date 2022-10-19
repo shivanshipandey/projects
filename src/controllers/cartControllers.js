@@ -10,8 +10,9 @@ const createCart = async (req, res) => {
     try {
         let data = req.body;
 
-        if (Object.keys(data).length == 0)
+        if (Object.keys(data).length == 0){
             return res.status(400).send({ status: false, message: "Body cannot be empty" });
+        }
 
         let userId = req.params.userId;
         if (!isValidObjectId(userId))
@@ -44,7 +45,7 @@ const createCart = async (req, res) => {
             return res.status(404).send({ status: false, message: "User does not exists" });
 
         if (cartId) {
-            var findCart = await cartModel.findOne({ _id: cartId });
+            let findCart = await cartModel.findOne({ _id: cartId });
             if (!findCart)
                 return res.status(404).send({ status: false, message: "Cart does not exists" });
         }
@@ -62,10 +63,10 @@ const createCart = async (req, res) => {
         }
 
         if (checkCart) {
-            if (cartId) {
-                if (checkCart._id.toString() != cartId)
-                    return res.status(403).send({ status: false, message: "Cart does not belong to this user" });
-            }
+           // if (cartId) {
+            //     if (checkCart._id.toString() != cartId)
+            //         return res.status(403).send({ status: false, message: "Cart does not belong to this user" });
+            // }
 
             let ProdIdInCart = checkCart.items;
             let uptotal = checkCart.totalPrice + checkProduct.price * Number(quantity);

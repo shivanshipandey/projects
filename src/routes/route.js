@@ -11,7 +11,7 @@ let {createProduct, productsById, updateProducts, deleteProduct, getProductsByFi
 let {createUser, userLogin, getUser, updateUsersProfile} = userController;
 let {createCart,getCartData, updateCart, deleteCart} = cartController
 let {authentication, authorization} = middleWare;
-let {createOrder}=orderController
+let {createOrder, cancelOrder}=orderController
 
 // ==========> Create User Api <============ 
 router.post("/register", createUser);
@@ -53,5 +53,9 @@ router.put('/users/:userId/cart', authentication, authorization, updateCart)
 router.delete('/users/:userId/cart',  authentication, authorization, deleteCart )
 
 //==========>create order<===============
-router.post('/users/:userId/orders',createOrder)
+router.post('/users/:userId/orders',  authentication, authorization, createOrder)
+
+//==========> Cancel Order <===========
+router.put('/users/:userId/orders',cancelOrder)
+
 module.exports=router
