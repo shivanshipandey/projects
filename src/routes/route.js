@@ -41,7 +41,7 @@ router.put("/products/:productId", updateProducts)
 router.delete('/products/:productId', deleteProduct)
 
 //=========> create Cart <=============
-router.post('/users/:userId/cart', createCart)
+router.post('/users/:userId/cart', authentication, authorization, createCart)
 
 //=========> Get Cart <=============
 router.get('/users/:userId/cart', authentication, authorization, getCartData)

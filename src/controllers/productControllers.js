@@ -19,7 +19,7 @@ const createProduct = async (req, res) => {
             return res.status(400).send({ status: "false", message: "Please enter the data in request body" });
         }
 
-        let { title, description, price, currencyId, currencyFormat, isFreeShipping, style, availableSizes, installments } = data;
+        let { title, description, price, currencyId, currencyFormat, isFreeShipping, style, availableSizes, installments, productImage } = data;
 
         if (!isEmpty(title)) {
             return res.status(400).send({ status: false, message: "Title is mandatory" })
@@ -200,11 +200,11 @@ const productsById = async function (req, res) {
 
         const productCheck = await productModel.findById({ _id: product })
         if (!productCheck) {
-            return res.status(400).send({ status: false, message: "This product is not found" })
+            return res.status(404).send({ status: false, message: "This product is not found" })
         }
 
         if (productCheck.isDeleted == true) {
-            return res.status(400).send({ status: false, message: "This product has been deleted" })
+            return res.status(404).send({ status: false, message: "This product has been deleted" })
         }
 
         let getProducts = await productModel.findOne({ _id: product, isDeleted: false }).select({ deletedAt: 0 })
@@ -233,11 +233,11 @@ const updateProducts = async function (req, res) {
 
         const existingProduct = await productModel.findById({ _id: productId })
         if (!existingProduct) {
-            return res.status(400).send({ status: false, message: "This product is not found" })
+            return res.status(404).send({ status: false, message: "This product is not found" })
         }
 
         if (existingProduct.isDeleted == true) {
-            return res.status(400).send({ status: false, message: "This product has been deleted" })
+            return res.status(404).send({ status: false, message: "This product has been deleted" })
         }
 
         let data = req.body
@@ -329,10 +329,14 @@ const deleteProduct = async function(req, res) {
         }
 
         // checking product available by given product ID 
-        const productById = await productModel.findOne({_id: productId,isDeleted: false,deletedAt: null,});
+        const productById = await productModel.findOne({_id: productId});
 
         if (!productById) {
             return res.status(404).send({status: false,message: "No product found by this product id",});
+        }
+
+        if (productById.isDeleted == true) {
+            return res.status(404).send({ status: false, message: "This product has been deleted" })
         }
 
         // updating product isDeleted field
