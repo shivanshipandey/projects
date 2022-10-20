@@ -4,10 +4,15 @@ const validation = require("../validator/validation");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-let {isEmpty,isValidName,isValidPhone,isValidpincode,isValidObjectId,
-  isValidStreet} = validation;
+let {isEmpty, isValidName, isValidPhone, isValidpincode, isValidObjectId, isValidStreet} = validation;
 
-// ========> Create User Api <=================
+
+
+
+// ==========================================> CREATE USER <=================================//
+
+
+
 const createUser = async function (req, res) {
   try {
     let data = req.body;
@@ -43,8 +48,8 @@ const createUser = async function (req, res) {
       return res.status(400).send({ status: "false", message: "Provide a valid phone number" });
     }
     if( password.length < 8 || password.length > 15){
-      return res.status(400).send({ status: false, message: "passwword no" })
-  }
+      return res.status(400).send({ status: false, message: "Length of password is not correct" })
+    }
     if (!isValidName(fname)) {
       return res.status(400).send({status: "false",message: "first name must be in alphabetical order"});
     }
@@ -53,7 +58,7 @@ const createUser = async function (req, res) {
     // ------- Address Validation  --------
     if (address) {
       data.address = JSON.parse(data.address);
-      if (address.shipping) {
+      if(address.shipping) {
         if (!isEmpty(address.shipping.street)) {
           return res.status(400).send({status: "false", message: "street must be present"});
         }
@@ -94,7 +99,7 @@ const createUser = async function (req, res) {
         }
       }
     }
-    const saltRounds = 10;
+    const saltRounds = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, saltRounds);
     data.password = hash;
 
@@ -102,14 +107,14 @@ const createUser = async function (req, res) {
     if (checkEmail) {
       return res.status(400).send({status: "false", message: "Email is already in use"});
     }
-    let checkPhone = await userModel.findOne({ phone: phone });
+    let checkPhone = await userModel.findOne({phone });
     if (checkPhone) {
       return res.status(400).send({status: "false", message: "Phone number is already in use"});
     }
 
-    // if(!profileImage){
-    //   return res.status(400).send({ status : false, message : "Profile Image is mandatory"})
-    // }
+    if(!profileImage){
+      return res.status(400).send({ status : false, message : "Profile Image is mandatory"})
+    }
 
      
     let profileImgUrl = await uploadFile(files[0]);
@@ -118,12 +123,17 @@ const createUser = async function (req, res) {
     let savedUser = await userModel.create(data);
     return res.status(201).send({
       status: true,message: "user has been created successfully",data: savedUser});
-    } catch (err) {
-    return res.status(500).send({ status: "false", msg: err.message });
+    } catch (error) {
+    return res.status(500).send({ status: "false", msg: error.message });
   }
 };
 
-// ==========> User Login Api <================
+
+
+// ==================================> USER LOGIN <====================================//
+
+
+
 const userLogin = async function (req, res) {
   try {
     let data = req.body;
@@ -132,9 +142,11 @@ const userLogin = async function (req, res) {
     if (Object.keys(data).length == 0) {
       return res.status(400).send({status: false, message: "Please provide email and password"});
     }
+
     if (!email) {
       return res.status(400).send({ status: false, message: "Email must be present" });
     }
+
     if (!password) {
       return res.status(400).send({ status: false, message: "Password must be present" });
     }
@@ -143,10 +155,12 @@ const userLogin = async function (req, res) {
     if (!checkEmail) {
       return res.status(401).send({status: false,message: "Please provide a correct Email"});
     }
+
     let checkPassword = await bcrypt.compare(password, checkEmail.password);
     if (!checkPassword) {
       return res.status(401).send({status: false,message: "please provide a correct password"});
     }
+
     let token = jwt.sign({
         userId: checkEmail._id.toString(),
         iat: Math.floor(Date.now() / 1000),
@@ -155,11 +169,16 @@ const userLogin = async function (req, res) {
     res.setHeader("x-api-key", token);
     return res.status(200).send({status: true,message: "User Login Successful",data: {userId: checkEmail._id, token: token},});
   } catch (err) {
-    return res.status(500).send({ status: false, msg: err.message });
+    return res.status(500).send({ status: false, message: err.message });
   }
 };
 
-// ==========> Get Users Data <================
+
+
+// =====================================> GET USER <===========================================
+
+
+
 const getUser = async function (req, res) {
   try {
     let userId = req.params.userId;
@@ -177,6 +196,7 @@ const getUser = async function (req, res) {
     if (!checkData) {
       return res.status(404).send({status: false, message: "No data found"});
     }
+
     return res.status(200).send({
       status: true,message: "Users Profile Details",data: checkData}); 
   } catch (err) {
@@ -184,7 +204,12 @@ const getUser = async function (req, res) {
   }
 };
 
-// ===========> Update Users Data <=============
+
+
+// ===================================> Update Users Data <=====================================
+
+
+
 const updateUsersProfile = async function (req, res) {
   try {
     let userId = req.params.userId;
@@ -193,16 +218,20 @@ const updateUsersProfile = async function (req, res) {
     if (!isValidObjectId(userId)) {    //check if userid is valid
       return res.status(400).send({status: false, message: `${userId} is invalid`});
     }
+
     const checkUser = await userModel.findOne({ _id: userId });
     if (!checkUser) { return res.status(404).send({status: false, message: "User does not exist"});
     }
+
     if (userId != userLoggedIn) {
       return res.status(403).send({status: false, msg: "Error, authorization failed"});
     }
+
     const data = req.body;
     if (Object.keys(data).length == 0) {
       return res.status(400).send({status: false,message: "Insert Data : BAD REQUEST"});
     }
+
     let { fname, lname, email, phone, password } = data;
     if (fname || fname == "") {                     //validation for fname
       if(!isEmpty(fname)) {
@@ -212,6 +241,7 @@ const updateUsersProfile = async function (req, res) {
         return res.status(400).send({ status: false, msg: "Invalid fname" });
       }
     }
+
     if (lname || lname == "") {                   //validation for lname
       if(!isEmpty(lname)) {
         return res.status(400).send({status: false, msg: "Please Provide last name"});
@@ -220,6 +250,7 @@ const updateUsersProfile = async function (req, res) {
         return res.status(400).send({ status: false, msg: "Invalid lname" });
       }
     }
+
     if (email || email == "") {                 //validation for mail
       if(!isEmpty(email)) {
         return res.status(400).send({status: false, msg: "Please Provide email address"});
@@ -254,6 +285,7 @@ const updateUsersProfile = async function (req, res) {
       if (!isValidPassword(password)) {
         return res.status(400).send({status: false,message: "Password should be Valid min 8 character and max 15 "});
       }
+      
       const encrypt = await bcrypt.hash(password, 10);
       data.password = encrypt;
     }
@@ -289,16 +321,9 @@ const updateUsersProfile = async function (req, res) {
         return res.status(400).send({status: false,message: "Please provide a valid pincode in billing address!"});
       }
     }
-    // let profileImage = req.files;
-    // if (profileImage && profileImage.length > 0) {
-    //   let uploadFileURL = await uploadFile(profileImage[0]);
-    //   data.profileImage = uploadFileURL;
-    //  } else {
-    //   return res.status(400).send({ status: false, msg: "No Image found" });
-    // }
 
     let updateData = await userModel.findOneAndUpdate({ _id: userId }, data, {new: true});
-    res.status(200).send({status: true,message: "User profile Updated",data: updateData});
+    res.status(200).send({status: true,message: "User profile updated",data: updateData});
   } catch (err) {
     res.status(500).send({status: false, message: err.message});
   }

@@ -4,6 +4,12 @@ const validation = require('../validator/validation')
 
 let { isValid, isEmpty,validSize, isValidPrice, isValidStyle, isValidObjectId, isValidInputBody, validPrice } = validation;
 
+
+
+//======================================> CREATE PRODUCT <=====================================//
+
+
+
 const createProduct = async (req, res) => {
     try {
         let data = req.body
@@ -114,7 +120,12 @@ const createProduct = async (req, res) => {
 }
 
 
-//============================= GET BY FILTER ===========================//
+
+
+//======================================> GET BY FILTER <==================================//
+
+
+
 
 const getProductsByFilter = async function (req, res){
     try{
@@ -128,7 +139,6 @@ const getProductsByFilter = async function (req, res){
 
        if(Object.keys(obj).length != 0){
 
-        
         if (size) {
             if(!validSize(size)){
                 return res.status(400).send({ status : false, message : "Size is not valid"})
@@ -174,7 +184,10 @@ const getProductsByFilter = async function (req, res){
 }
 
 
-//=========================== GET API =============================//
+
+//=====================================> GET API <==========================================//
+
+
 
 const productsById = async function (req, res) {
     try {
@@ -204,7 +217,11 @@ const productsById = async function (req, res) {
 }
 
 
-//================================= UPDATE =============================//
+
+//======================================> UPDATE <=====================================//
+
+
+
 
 const updateProducts = async function (req, res) {
     try {
@@ -293,23 +310,34 @@ const updateProducts = async function (req, res) {
 }
 
 
+
+//=====================================> DELETE PRODUCT <==================================//
+
+
+
 const deleteProduct = async function(req, res) {
     try {
         const productId = req.params.productId;
+
+        if(!isEmpty(productId)){
+            return res.status(400).send({ status : false, message : "ProductId is missing in params"})
+        }
        
         // validating product id
         if(!isValidObjectId(productId)){
             return res.status(400).send({ status: false, message: "Invalid product id" });
         }
+
         // checking product available by given product ID 
         const productById = await productModel.findOne({_id: productId,isDeleted: false,deletedAt: null,});
 
         if (!productById) {
             return res.status(404).send({status: false,message: "No product found by this product id",});
         }
+
         // updating product isDeleted field
-        const markDirty = await productModel.findOneAndUpdate({ _id: productId }, { $set: { isDeleted: true, deletedAt: Date.now() } });
-            return res.status(200).send({ status: true, message: "Product successfully deleted", data : markDirty });
+        const deleteProduct = await productModel.findOneAndUpdate({ _id: productId }, { $set: { isDeleted: true, deletedAt: Date.now() } });
+            return res.status(200).send({ status: true, message: "Product successfully deleted", data : deleteProduct });
    
         } catch (error) {
         res.status(500).send({ error: error.message });
