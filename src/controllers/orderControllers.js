@@ -15,15 +15,12 @@ const createOrder = async function (req, res){
 
         let userId = req.params.userId
 
-        if(!isEmpty(userId)){
-            return res.status(400).send({ status : false, message : "User is missing in params"})
-        }
 
         if(!isValidObjectId(userId)){
             return res.status(400).send({ status : false, message : "UserId is not valid"})
         }
 
-        let findUser = await userModel.findById({ userId})
+        let findUser = await userModel.findOne({ userId})
         if(!findUser){
             return res.status(400).send({ status : false, message : "This user is not found"})
         }
@@ -44,7 +41,7 @@ const createOrder = async function (req, res){
             return res.status(400).send({ status : false, message : "CartId is not valid"})
         }
 
-        let findCart = await cartModel.findOne({ _id: cartId })
+        let findCart = await cartModel.findOne({cartId })
         if (!findCart) {
             return res.status(400).send({ status: false, message: "This cartId doesn't exist" })
         }
@@ -65,7 +62,9 @@ const createOrder = async function (req, res){
         let myOrder = { userId, items, totalPrice, totalItems, totalQuantity }
 
         let order = await orderModel.create(myOrder)
-        return res.status(201).send({ status: true, message: 'Order placed successfully', data: order });
+        await cartModel.findOneAndUpdate({ _id: cartId, userId:userId }, { items: [], totalItems: 0, totalPrice: 0 })
+
+        return res.status(201).send({ status: true, message: 'Success', data: order });
     }
     catch (error) {
         res.status(500).send({ status : false, message : error.message})
@@ -79,7 +78,11 @@ const createOrder = async function (req, res){
 const cancelOrder = async function (req, res){
     try {
 
+        let data = req.body
         let userId = req.params.userId
+
+        let{ orderId, status} = data
+
 
         if(!isEmpty(userId)){
             return res.status(400).send({ status : false, message : "UserId is missing in params"})
@@ -89,19 +92,53 @@ const cancelOrder = async function (req, res){
             return res.status(400).send({ status : false, message : "UserId is not valid"})
         }
 
-        let userCheck = await userModel.findById({userId})
+        let userCheck = await userModel.findOne({userId})
         if(!userCheck){
             return res.status(400).send({ status : false, message : "This userId is not found"})
         }
 
+         if(!orderId){
+            return res.status(400).send({ status : false, message : "OrderId is missing"})
+         }
+
         let productId = req.body.orderId;
 
-        const orderCancel = await orderModel.findOneAndUpdate({ _id: productId },{ isDeleted: true, deletedAt: Date(), status: "cancelled" },{ new: true });
-        return res.status(200).send({ status: true, message: "Order has been cancelled Successfully", data: orderCancel });
+        if (findOrder.status === "completed") {
+            return res.status(400).send({ status: false, message: "Cannot cancel completed order" })
+        }
+
+        if (findOrder.status === "cancelled") {
+            return res.status(400).send({ status: false, message: "Order is already cancelled" })
+        }
+        let newStatus = {}
+        if(status){
+            if(!(status =="Completed" || status == "Cancelled")){
+                return res.status(400).send({ status : false, message : "status can be from enum only"})
+            }else{
+                newStatus.status = status
+            }
+        }
+
+        const orderCancel = await orderModel.findOneAndUpdate({ _id: productId },newStatus,{ new: true });
+        return res.status(200).send({ status: true, message: "Success", data: orderCancel });
     }catch(err){
         res.status(500).send(err.message);
     }
 };
 module.exports = { createOrder, cancelOrder }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

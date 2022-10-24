@@ -111,11 +111,6 @@ const createUser = async function (req, res) {
     if (checkPhone) {
       return res.status(400).send({status: "false", message: "Phone number is already in use"});
     }
-
-    if(!profileImage){
-      return res.status(400).send({ status : false, message : "Profile Image is mandatory"})
-    }
-
      
     let profileImgUrl = await uploadFile(files[0]);
         data.profileImage = profileImgUrl

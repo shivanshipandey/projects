@@ -56,7 +56,7 @@ router.delete('/users/:userId/cart',  authentication, authorization, deleteCart 
 router.post('/users/:userId/orders',  authentication, authorization, createOrder)
 
 //==========> Cancel Order <===========
-router.put('/users/:userId/orders',cancelOrder)
+router.put('/users/:userId/orders', authentication, authorization,cancelOrder)
 
 
 router.all("/*", function (req, res) {
