@@ -66,18 +66,18 @@ const createBlog = async function (req, res) {
           //if subcategory is present then it should be an array
           if (subcategory) {
                if (!Array.isArray(subcategory)) {
-                    return res.status(400).send({ status: false, message: "Give subcategory only in a array of String." })
+                    return res.status(400).send({ status: false, mssg: "Give subcategory only in a array of String." })
                }
           }
 
           //if isPublished is present then it should be Boolean
           if (isPublished) {
                if (typeof (isPublished) != "boolean") {
-                    return res.status(400).send({ status: false, message: "isPublished can be true or false only" })
+                    return res.status(400).send({ status: false, mssg: "isPublished can be true or false only" })
                }
           }
 
-
+          
           //Here's the creation of blog
           if (isPublished == true) { req.body.publishedAt = time }
           let blogStored = await blogModel.create(req.body)

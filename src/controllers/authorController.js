@@ -122,26 +122,17 @@ const createAuthor = async function (req, res) {
 
 const loginAuthor = async function (req, res) {
      try {
-
-          // Email is mandatory 
-
           let { email, password } = req.body
           if (!email) {
                return res.status(400).send({
                     status: false, message: "EmailId is mandatory"
                })
           }
-
-          // Password is mandatory
-
           if (!password) {
                return res.status(400).send({
                     status: false, message: "Password is mandatory"
                })
           }
-
-          //Check Whether the email and password you entered is correct or not
-
           let authorCheck = await authorModel.findOne({
                email: email,
                password: password
@@ -149,9 +140,6 @@ const loginAuthor = async function (req, res) {
           if (!authorCheck) return res.status(400).send({
                status: false, message: "EmailId or password is incorrect"
           })
-
-          //Generating Token
-
           let token = jwt.sign(
                {
                     authorId: authorCheck._id.toString(),
