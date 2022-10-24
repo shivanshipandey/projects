@@ -13,7 +13,7 @@ router.post("/login", userController.loginUser)
 
 
                          //BOOKS API//
-router.post('/books', middleware.authentication, middleware.authorisation2, bookController.createBook )
+router.post('/books', middleware.authentication,  bookController.createBook )
 router.get("/books",middleware.authentication, bookController.getBookByQuery)
 router.get('/books/:bookId',middleware.authentication, bookController.getBookByParam)
 router.put("/books/:bookId", middleware.authentication, middleware.authorisation, bookController.updateBooks)
